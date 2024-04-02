@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: driveschool
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: driveschool
+    ports:
+      - '5432:5432'
+    volumes:
+      - dbvolume:/var/lib/postgresql
+  dbadmin:
+    image: 'dpage/pgadmin4'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: contact@driveschool
+      PGADMIN_DEFAULT_PASSWORD: azerty123
+    ports:
+      - '5433:80'
+
+volumes:
+  dbvolume:
+  redisvolume:
