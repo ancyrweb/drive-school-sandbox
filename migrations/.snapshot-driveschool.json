@@ -37,7 +37,7 @@
         },
         "first_name": {
           "name": "first_name",
-          "type": "varchar(128)",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -46,7 +46,7 @@
         },
         "last_name": {
           "name": "last_name",
-          "type": "varchar(128)",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,

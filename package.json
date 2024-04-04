@@ -17,7 +17,11 @@
     "test": "vitest run --config ./vitest.config.js",
     "test:int": "vitest run --config ./vitest.int.config.js",
     "test:watch": "vitest --config ./vitest.config.js",
-    "test:all": "pnpm test && pnpm test:int"
+    "test:all": "pnpm test && pnpm test:int",
+    "orm:create-initial": "npx mikro-orm-esm migration:create --initial",
+    "orm:create": "npx mikro-orm-esm migration:create",
+    "orm:up": "npx mikro-orm-esm migration:up",
+    "orm:down": "npx mikro-orm-esm migration:down"
   },
   "dependencies": {
     "@mikro-orm/cli": "^6.1.12",
@@ -35,7 +39,8 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "tiny-types": "^1.22.0",
-    "unplugin-swc": "^1.4.4"
+    "unplugin-swc": "^1.4.4",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",
