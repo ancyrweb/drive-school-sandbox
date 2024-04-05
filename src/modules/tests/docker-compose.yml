@@ -1,0 +1,10 @@
+version: '3'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: driveschool
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: driveschool
+    ports:
+      - '13001:5432'

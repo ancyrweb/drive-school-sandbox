@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     include: ['**/*.int.test.ts', '**/*.e2e.test.ts'],
-    globalSetup: './src/tests/integration/global-setup.ts',
+    globalSetup: './src/modules/tests/global-setup.ts',
     fileParallelism: false,
     maxConcurrency: 1,
     maxWorkers: 1,

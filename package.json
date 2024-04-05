@@ -38,6 +38,7 @@
     "date-fns": "^3.6.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "testcontainers": "^10.8.1",
     "tiny-types": "^1.22.0",
     "unplugin-swc": "^1.4.4",
     "zod": "^3.22.4"
