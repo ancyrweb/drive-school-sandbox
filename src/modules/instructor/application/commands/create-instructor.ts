@@ -1,10 +1,14 @@
 import { AbstractCommand } from '../../../shared/command.js';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { IDDto } from '../../../shared/id-dto.js';
-import { IInstructorRepository } from '../ports/instructor-repository.js';
+import {
+  I_INSTRUCTOR_REPOSITORY,
+  IInstructorRepository,
+} from '../ports/instructor-repository.js';
 import { z } from 'zod';
 import { Instructor } from '../../domain/instructor-entity.js';
 import { InstructorId } from '../../domain/instructor-id.js';
+import { Inject } from '@nestjs/common';
 
 export class CreateInstructorCommand extends AbstractCommand<{
   firstName: string;
@@ -22,7 +26,10 @@ export class CreateInstructorCommand extends AbstractCommand<{
 export class CreateInstructorCommandHandler
   implements ICommandHandler<CreateInstructorCommand, IDDto>
 {
-  constructor(private readonly instructorRepository: IInstructorRepository) {}
+  constructor(
+    @Inject(I_INSTRUCTOR_REPOSITORY)
+    private readonly instructorRepository: IInstructorRepository,
+  ) {}
 
   async execute(command: CreateInstructorCommand) {
     command.validate();

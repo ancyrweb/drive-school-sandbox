@@ -1,4 +1,4 @@
-import { RamInstructorRepository } from '../../infrastructure/ram/ram-instructor-repository.js';
+import { RamInstructorRepository } from '../../infrastructure/persistence/ram/ram-instructor-repository.js';
 import {
   CreateInstructorCommand,
   CreateInstructorCommandHandler,

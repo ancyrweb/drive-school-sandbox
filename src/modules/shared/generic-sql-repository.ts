@@ -19,7 +19,7 @@ export abstract class GenericSqlRepository<
   }
 
   async create(entity: TEntity) {
-    this.em.persist(entity);
+    await this.em.persistAndFlush(entity);
   }
 
   async clear() {

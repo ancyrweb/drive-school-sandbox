@@ -4,6 +4,8 @@ import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AppController } from './app-controller.js';
+import { InstructorModule } from '../../../instructor/infrastructure/nest/instructor-module.js';
+import { Instructor } from '../../../instructor/domain/instructor-entity.js';
 
 @Module({
   imports: [
@@ -16,8 +18,9 @@ import { AppController } from './app-controller.js';
         return {
           metadataProvider: TsMorphMetadataProvider,
           clientUrl:
-            'postgresql://driveschool:password123@localhost:13001/driveschool',
+            'postgresql://driveschool:password123@localhost:5432/driveschool',
           driver: PostgreSqlDriver,
+          entities: [Instructor],
           discovery: {
             warnWhenNoEntities: false,
           },
@@ -30,6 +33,8 @@ import { AppController } from './app-controller.js';
         };
       },
     }),
+
+    InstructorModule,
   ],
   controllers: [AppController],
   providers: [],

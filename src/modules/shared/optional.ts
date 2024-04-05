@@ -19,7 +19,7 @@ export class Optional<T> {
     return this.value === null;
   }
 
-  getOrThrow(factory: () => Error) {
+  getOrThrow(factory: () => Error = () => new Error('Not found')) {
     if (this.value === null) {
       throw factory();
     }

@@ -8,8 +8,8 @@ import { TinyType } from 'tiny-types';
 export abstract class DbTinyType<T extends TinyType> extends Type<T, string> {
   abstract create(value: string): T;
 
-  convertToDatabaseValue(value: T): string {
-    return value.toString();
+  convertToDatabaseValue(obj: T): string {
+    return (obj as any).value;
   }
 
   convertToJSValue(value: string): T {
