@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { AppController } from './app.controller.js';
+import { AppController } from './app-controller.js';
 
 @Module({
   imports: [

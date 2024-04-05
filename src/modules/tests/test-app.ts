@@ -5,7 +5,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { AppModule } from '../app/infrastructure/nest/app.module.js';
+import { AppModule } from '../app/infrastructure/nest/app-module.js';
 import { Nullable } from '../shared/types.js';
 
 export class TestApp {
