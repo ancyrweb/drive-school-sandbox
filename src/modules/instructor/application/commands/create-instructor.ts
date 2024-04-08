@@ -32,8 +32,6 @@ export class CreateInstructorCommandHandler
   ) {}
 
   async execute(command: CreateInstructorCommand) {
-    command.validate();
-
     const instructor = new Instructor({
       id: InstructorId.generate(),
       firstName: command.props.firstName,

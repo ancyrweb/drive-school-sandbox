@@ -10,7 +10,8 @@ export default defineConfig({
   migrations: {
     tableName: 'mikro_orm_migrations',
     path: './migrations',
-    glob: '.js',
+    pathTs: './migrations',
+    glob: '*.{js,ts}',
     transactional: true,
     disableForeignKeys: true,
     allOrNothing: true,

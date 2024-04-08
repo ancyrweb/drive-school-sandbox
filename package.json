@@ -21,7 +21,8 @@
     "orm:create-initial": "npx mikro-orm-esm migration:create --initial",
     "orm:create": "npx mikro-orm-esm migration:create",
     "orm:up": "npx mikro-orm-esm migration:up",
-    "orm:down": "npx mikro-orm-esm migration:down"
+    "orm:down": "npx mikro-orm-esm migration:down",
+    "orm": "npx mikro-orm-esm"
   },
   "dependencies": {
     "@mikro-orm/cli": "^6.1.12",

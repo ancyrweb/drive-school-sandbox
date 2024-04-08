@@ -13,7 +13,7 @@ services:
   dbadmin:
     image: 'dpage/pgadmin4'
     environment:
-      PGADMIN_DEFAULT_EMAIL: contact@driveschool
+      PGADMIN_DEFAULT_EMAIL: contact@driveschool.com
       PGADMIN_DEFAULT_PASSWORD: azerty123
     ports:
       - '5433:80'

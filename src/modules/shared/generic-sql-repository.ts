@@ -19,7 +19,8 @@ export abstract class GenericSqlRepository<
   }
 
   async create(entity: TEntity) {
-    await this.em.persistAndFlush(entity);
+    console.log('create', (this.em as any).asyncId);
+    this.em.persist(entity);
   }
 
   async clear() {
