@@ -1,7 +1,9 @@
-import { Optional } from './optional.js';
+import { Optional } from '../utils/optional.js';
 
 export interface IRepository<TId, TEntity extends { id: TId }> {
   findById(id: TId): Promise<Optional<TEntity>>;
   create(entity: TEntity): Promise<void>;
+  update(entity: TEntity): Promise<void>;
+  delete(entity: TEntity): Promise<void>;
   clear(): Promise<void>;
 }

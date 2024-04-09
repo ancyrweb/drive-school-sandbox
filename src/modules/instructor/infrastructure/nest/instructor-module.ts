@@ -6,8 +6,9 @@ import { InstructorController } from './instructor-controller.js';
 import { SqlInstructorRepository } from '../persistence/sql/sql-instructor-repository.js';
 import { I_INSTRUCTOR_REPOSITORY } from '../../application/ports/instructor-repository.js';
 import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
-import { Instructor } from '../../domain/instructor-entity.js';
+import { Instructor } from '../../domain/entities/instructor-entity.js';
 import { CreateInstructorCommandHandler } from '../../application/commands/create-instructor.js';
+import { RenameInstructorCommandHandler } from '../../application/commands/rename-instructor.js';
 
 @Module({
   imports: [CqrsModule, MikroOrmModule.forFeature([Instructor])],
@@ -26,6 +27,7 @@ import { CreateInstructorCommandHandler } from '../../application/commands/creat
     },
     // Commands & Queries
     CreateInstructorCommandHandler,
+    RenameInstructorCommandHandler,
   ],
 })
 export class InstructorModule {}

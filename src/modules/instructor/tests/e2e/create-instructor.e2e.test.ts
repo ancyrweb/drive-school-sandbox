@@ -3,7 +3,7 @@ import {
   I_INSTRUCTOR_REPOSITORY,
   IInstructorRepository,
 } from '../../application/ports/instructor-repository.js';
-import { InstructorId } from '../../domain/instructor-id.js';
+import { InstructorId } from '../../domain/entities/instructor-id.js';
 
 describe('Feature: creating an instructor', () => {
   let testApp = new TestApp();

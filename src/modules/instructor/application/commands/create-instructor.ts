@@ -1,13 +1,13 @@
-import { AbstractCommand } from '../../../shared/command.js';
+import { AbstractCommand } from '../../../shared/domain/command.js';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { IDDto } from '../../../shared/id-dto.js';
+import { IDDto } from '../../../shared/domain/id-dto.js';
 import {
   I_INSTRUCTOR_REPOSITORY,
   IInstructorRepository,
 } from '../ports/instructor-repository.js';
 import { z } from 'zod';
-import { Instructor } from '../../domain/instructor-entity.js';
-import { InstructorId } from '../../domain/instructor-id.js';
+import { Instructor } from '../../domain/entities/instructor-entity.js';
+import { InstructorId } from '../../domain/entities/instructor-id.js';
 import { Inject } from '@nestjs/common';
 
 export class CreateInstructorCommand extends AbstractCommand<{

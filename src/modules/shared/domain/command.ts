@@ -1,4 +1,4 @@
-import { Nullable } from './types.js';
+import { Nullable } from '../utils/types.js';
 import { z } from 'zod';
 
 /**

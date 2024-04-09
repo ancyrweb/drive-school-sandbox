@@ -1,7 +1,7 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { Optional } from './optional.js';
+import { Optional } from '../utils/optional.js';
 import { IRepository } from './repository.js';
-import { Id } from './id.js';
+import { Id } from '../domain/id.js';
 
 export abstract class GenericSqlRepository<
   TId extends Id,
@@ -19,8 +19,15 @@ export abstract class GenericSqlRepository<
   }
 
   async create(entity: TEntity) {
-    console.log('create', (this.em as any).asyncId);
     this.em.persist(entity);
+  }
+
+  async update(entity: TEntity) {
+    this.em.persist(entity);
+  }
+
+  async delete(entity: TEntity) {
+    this.em.remove(entity);
   }
 
   async clear() {

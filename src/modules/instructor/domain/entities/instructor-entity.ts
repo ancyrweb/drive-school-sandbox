@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-import { AggregateRoot } from '../../shared/aggregate-root.js';
+import { AggregateRoot } from '../../../shared/domain/aggregate-root.js';
 import { InstructorId, InstructorIdType } from './instructor-id.js';
-import { DomainEvent } from '../../shared/domain-event.js';
+import { InstructorRenamedEvent } from '../events/InstructorRenamedEvent.js';
 
 @Entity()
 export class Instructor extends AggregateRoot {
@@ -22,10 +22,16 @@ export class Instructor extends AggregateRoot {
     super();
     Object.assign(this, props);
   }
-}
 
-class InstructorCreatedEvent extends DomainEvent<{}> {
-  constructor(public readonly instructor: Instructor) {
-    super({});
+  rename(firstName: string, lastName: string) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.raise(
+      new InstructorRenamedEvent({
+        instructorId: this.id.value,
+        firstName,
+        lastName,
+      }),
+    );
   }
 }

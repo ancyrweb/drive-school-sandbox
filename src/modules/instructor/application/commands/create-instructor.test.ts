@@ -3,7 +3,7 @@ import {
   CreateInstructorCommand,
   CreateInstructorCommandHandler,
 } from './create-instructor.js';
-import { InstructorId } from '../../domain/instructor-id.js';
+import { InstructorId } from '../../domain/entities/instructor-id.js';
 
 describe('Feature: creating an instructor', () => {
   const instructorRepository = new RamInstructorRepository();

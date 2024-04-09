@@ -6,7 +6,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { AppModule } from '../app/infrastructure/nest/app-module.js';
-import { Nullable } from '../shared/types.js';
+import { Nullable } from '../shared/utils/types.js';
 
 export class TestApp {
   public nest: Nullable<NestFastifyApplication> = null;

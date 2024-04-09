@@ -7,7 +7,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AppController } from './app-controller.js';
 import { InstructorModule } from '../../../instructor/infrastructure/nest/instructor-module.js';
-import { Instructor } from '../../../instructor/domain/instructor-entity.js';
+import { Instructor } from '../../../instructor/domain/entities/instructor-entity.js';
 import { DatabaseInterceptor } from './database-interceptor.js';
 
 @Module({

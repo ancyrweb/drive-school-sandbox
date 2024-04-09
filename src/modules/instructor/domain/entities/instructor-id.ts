@@ -1,4 +1,4 @@
-import { BrandedId, DbIdType, IdProvider } from '../../shared/id.js';
+import { BrandedId, DbIdType, IdProvider } from '../../../shared/domain/id.js';
 
 export class InstructorId extends BrandedId('InstructorId') {
   static generate() {
