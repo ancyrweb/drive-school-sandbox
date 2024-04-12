@@ -1,6 +1,4 @@
-import { TinyType, TinyTypeOf } from 'tiny-types';
 import { randomUUID } from 'crypto';
-import { DbTinyType } from './db-tiny-type.js';
 
 /**
  * Generates random IDs
@@ -12,13 +10,6 @@ export class IdProvider {
 }
 
 /**
- * Represents an ID.
- */
-export type Id = {
-  equals: (value: any) => boolean;
-};
-
-/**
  * Class factory that creates a branded ID.
  * A branded ID is an ID associated to a specific class.
  * This technique allows to avoid mixing IDs from different classes.
@@ -27,17 +18,28 @@ export type Id = {
  * @param brand
  * @constructor
  */
-export function BrandedId<T extends string>(brand: T) {
-  return class extends TinyTypeOf<string>() {
-    __brand: T;
-  };
+export class BrandedId<T extends string> {
+  __brand: T;
+
+  constructor(public readonly value: string = IdProvider.generate()) {}
 }
 
 /**
- * Represent a database ID
+ * A MikroORM type to convert our branded ID to a database value and back.
+ * It is required because MikroORM does not support custom types out of the box.
  */
-export abstract class DbIdType<T extends TinyType> extends DbTinyType<T> {
-  getColumnType(): string {
-    return 'varchar(36)';
-  }
+export function BrandedIdType(factory: new (value?: string) => BrandedId<any>) {
+  return class {
+    convertToDatabaseValue(obj: BrandedId<any>): string {
+      return obj.value;
+    }
+
+    convertToJSValue(value: string): BrandedId<any> {
+      return new factory(value);
+    }
+
+    getColumnType(): string {
+      return 'varchar(36)';
+    }
+  };
 }

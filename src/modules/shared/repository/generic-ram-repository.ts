@@ -1,10 +1,10 @@
 import { Optional } from '../utils/optional.js';
 import { IRepository } from './repository.js';
-import { Id } from '../domain/id.js';
+import { BrandedId } from '../domain/id.js';
 import { Nullable } from '../utils/types.js';
 
 export abstract class GenericRamRepository<
-  TId extends Id,
+  TId extends BrandedId<any>,
   TEntity extends { id: TId },
 > implements IRepository<TId, TEntity>
 {
@@ -12,7 +12,7 @@ export abstract class GenericRamRepository<
 
   async findById(id: TId): Promise<Optional<TEntity>> {
     return Optional.of(
-      this.entities.find((entity) => entity.id.equals(id)) ?? null,
+      this.entities.find((entity) => entity.id.value === id.value) ?? null,
     );
   }
 
@@ -21,7 +21,9 @@ export abstract class GenericRamRepository<
   }
 
   async update(entity: TEntity): Promise<void> {
-    const index = this.entities.findIndex((e) => e.id.equals(entity.id));
+    const index = this.entities.findIndex(
+      (e) => entity.id.value === e.id.value,
+    );
     if (index === -1) {
       throw new Error('Entity not found');
     }
@@ -30,7 +32,9 @@ export abstract class GenericRamRepository<
   }
 
   async delete(entity: TEntity): Promise<void> {
-    const index = this.entities.findIndex((e) => e.id.equals(entity.id));
+    const index = this.entities.findIndex(
+      (e) => entity.id.value === e.id.value,
+    );
     if (index === -1) {
       throw new Error('Entity not found');
     }
@@ -43,7 +47,7 @@ export abstract class GenericRamRepository<
   }
 
   findByIdSync(id: TId): Nullable<TEntity> {
-    return this.entities.find((entity) => entity.id.equals(id)) ?? null;
+    return this.entities.find((entity) => entity.id.value === id.value) ?? null;
   }
 
   createSync(entity: TEntity): void {
