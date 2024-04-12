@@ -9,7 +9,6 @@ import { z } from 'zod';
 import { Instructor } from '../../domain/entities/instructor-entity.js';
 import { InstructorId } from '../../domain/entities/instructor-id.js';
 import { Inject } from '@nestjs/common';
-import { BrandedId } from '../../../shared/domain/id.js';
 
 export class CreateInstructorCommand extends AbstractCommand<{
   firstName: string;
@@ -22,8 +21,6 @@ export class CreateInstructorCommand extends AbstractCommand<{
     });
   }
 }
-
-class FooId extends BrandedId<'Foo'> {}
 
 @CommandHandler(CreateInstructorCommand)
 export class CreateInstructorCommandHandler
