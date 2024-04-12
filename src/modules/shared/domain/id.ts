@@ -28,14 +28,14 @@ export class BrandedId<T extends string> {
  * A MikroORM type to convert our branded ID to a database value and back.
  * It is required because MikroORM does not support custom types out of the box.
  */
-export function BrandedIdType(factory: new (value?: string) => BrandedId<any>) {
+export function BrandedIdType(klass: new (value?: string) => BrandedId<any>) {
   return class {
     convertToDatabaseValue(obj: BrandedId<any>): string {
       return obj.value;
     }
 
     convertToJSValue(value: string): BrandedId<any> {
-      return new factory(value);
+      return new klass(value);
     }
 
     getColumnType(): string {
