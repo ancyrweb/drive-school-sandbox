@@ -23,6 +23,14 @@ export class Instructor extends AggregateRoot {
     Object.assign(this, props);
   }
 
+  static create(props: {
+    id: InstructorId;
+    firstName: string;
+    lastName: string;
+  }) {
+    return new Instructor(props);
+  }
+
   rename(firstName: string, lastName: string) {
     this.firstName = firstName;
     this.lastName = lastName;

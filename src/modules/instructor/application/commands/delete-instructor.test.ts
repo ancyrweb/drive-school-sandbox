@@ -16,7 +16,7 @@ describe('Feature: deleting an instructor', () => {
   beforeEach(() => {
     instructorRepository.clear();
 
-    const instructor = new Instructor({
+    const instructor = Instructor.create({
       id: new InstructorId('instructor'),
       firstName: 'John',
       lastName: 'Doe',

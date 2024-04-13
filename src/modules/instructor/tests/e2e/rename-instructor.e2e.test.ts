@@ -9,7 +9,7 @@ import { Instructor } from '../../domain/entities/instructor-entity.js';
 
 describe('Feature: renaming an instructor', () => {
   const instructor = new InstructorFixture(
-    new Instructor({
+    Instructor.create({
       id: new InstructorId('johndoe'),
       firstName: 'John',
       lastName: 'Doe',

@@ -6,10 +6,14 @@ export class Role {
   static STUDENT = new Role('student');
   static INSTRUCTOR = new Role('instructor');
 
-  constructor(public readonly value: string) {
+  private constructor(public readonly value: string) {
     if (value != 'admin' && value != 'student' && value != 'instructor') {
       throw new InvariantException('Invalid user type');
     }
+  }
+
+  static create(value: string) {
+    return new Role(value);
   }
 
   equals(role: Role) {
@@ -23,7 +27,7 @@ export class RoleDbType extends Type<Role, string> {
   }
 
   convertToJSValue(value: string): Role {
-    return new Role(value);
+    return Role.create(value);
   }
 
   getColumnType() {

@@ -16,4 +16,7 @@ export class User extends AggregateRoot {
 
   @Property({ type: RoleDbType })
   role: Role;
+
+  @Property()
+  apiKey: string;
 }
