@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-import { AggregateRoot } from '../../../shared/domain/aggregate-root.js';
+import { AggregateRoot } from '../../../shared/lib/aggregate-root.js';
 import { InstructorId, InstructorIdType } from './instructor-id.js';
 import { InstructorRenamedEvent } from '../events/InstructorRenamedEvent.js';
 

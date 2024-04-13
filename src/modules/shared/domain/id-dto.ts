@@ -1,5 +1,5 @@
 /**
- * Represent the output of most creational commands.
+ * Represent the output of most creationnal commands.
  * In order to respect CQRS faithfully, we limit the output of
  * our commands to a single ID.
  */

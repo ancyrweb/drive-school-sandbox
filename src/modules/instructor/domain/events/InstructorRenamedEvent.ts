@@ -1,4 +1,4 @@
-import { DomainEvent } from '../../../shared/domain/domain-event.js';
+import { DomainEvent } from '../../../shared/lib/domain-event.js';
 
 export class InstructorRenamedEvent extends DomainEvent<{
   instructorId: string;

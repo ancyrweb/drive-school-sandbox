@@ -1,6 +1,6 @@
 import { Optional } from '../utils/optional.js';
 import { IRepository } from './repository.js';
-import { BrandedId } from '../domain/id.js';
+import { BrandedId } from '../lib/id.js';
 import { Nullable } from '../utils/types.js';
 
 export abstract class GenericRamRepository<

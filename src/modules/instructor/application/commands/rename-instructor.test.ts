@@ -7,6 +7,7 @@ import {
 } from './rename-instructor.js';
 import { InstructorRenamedEvent } from '../../domain/events/InstructorRenamedEvent.js';
 import { expectEventToBeRaised } from '../../../shared/tests.js';
+import { AuthSeeds } from '../../../auth/tests/seeds/auth-seeds.js';
 
 describe('Feature: renaming an instructor', () => {
   const instructorRepository = new RamInstructorRepository();
@@ -28,11 +29,11 @@ describe('Feature: renaming an instructor', () => {
 
   describe('Scenario: happy path', () => {
     it('should rename the instructor', async () => {
-      const command = new RenameInstructorCommand({
+      const command = new RenameInstructorCommand(AuthSeeds.admin(), {
         instructorId: 'instructor',
         payload: {
-          firstName: 'Jonathan',
-          lastName: 'Wick',
+          firstName: 'Jack',
+          lastName: 'Daniels',
         },
       });
 
@@ -42,15 +43,15 @@ describe('Feature: renaming an instructor', () => {
         new InstructorId('instructor'),
       )!;
 
-      expect(instructor.firstName).toEqual('Jonathan');
-      expect(instructor.lastName).toEqual('Wick');
+      expect(instructor.firstName).toEqual('Jack');
+      expect(instructor.lastName).toEqual('Daniels');
 
       expectEventToBeRaised(
         instructor,
         new InstructorRenamedEvent({
           instructorId: 'instructor',
-          firstName: 'Jonathan',
-          lastName: 'Wick',
+          firstName: 'Jack',
+          lastName: 'Daniels',
         }),
       );
     });
@@ -58,7 +59,7 @@ describe('Feature: renaming an instructor', () => {
 
   describe('Scenario: instructor does not exist', () => {
     it('should fail', async () => {
-      const command = new RenameInstructorCommand({
+      const command = new RenameInstructorCommand(AuthSeeds.admin(), {
         instructorId: '123',
         payload: {
           firstName: 'Jonathan',

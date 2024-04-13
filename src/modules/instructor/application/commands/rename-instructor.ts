@@ -1,4 +1,4 @@
-import { AbstractCommand } from '../../../shared/domain/command.js';
+import { AbstractCommand } from '../../../shared/lib/command.js';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   I_INSTRUCTOR_REPOSITORY,
@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { Inject } from '@nestjs/common';
 import { InstructorId } from '../../domain/entities/instructor-id.js';
 import { NotFoundException } from '../../../shared/exceptions/not-found-exception.js';
+import { Role } from '../../../auth/domain/entities/role.js';
 
 export class RenameInstructorCommand extends AbstractCommand<{
   instructorId: string;
@@ -24,6 +25,10 @@ export class RenameInstructorCommand extends AbstractCommand<{
         lastName: z.string().min(2).max(128),
       }),
     });
+  }
+
+  protected requires(): Role[] {
+    return [Role.ADMIN];
   }
 }
 

@@ -1,4 +1,4 @@
-import { AbstractCommand } from '../../../shared/domain/command.js';
+import { AbstractCommand } from '../../../shared/lib/command.js';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { IDDto } from '../../../shared/domain/id-dto.js';
 import {
@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { Instructor } from '../../domain/entities/instructor-entity.js';
 import { InstructorId } from '../../domain/entities/instructor-id.js';
 import { Inject } from '@nestjs/common';
+import { Role } from '../../../auth/domain/entities/role.js';
 
 export class CreateInstructorCommand extends AbstractCommand<{
   firstName: string;
@@ -19,6 +20,10 @@ export class CreateInstructorCommand extends AbstractCommand<{
       firstName: z.string().min(2).max(128),
       lastName: z.string().min(2).max(128),
     });
+  }
+
+  protected requires(): Role[] {
+    return [Role.ADMIN];
   }
 }
 

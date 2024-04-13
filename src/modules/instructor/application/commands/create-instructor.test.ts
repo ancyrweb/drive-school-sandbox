@@ -4,6 +4,7 @@ import {
   CreateInstructorCommandHandler,
 } from './create-instructor.js';
 import { InstructorId } from '../../domain/entities/instructor-id.js';
+import { AuthSeeds } from '../../../auth/tests/seeds/auth-seeds.js';
 
 describe('Feature: creating an instructor', () => {
   const instructorRepository = new RamInstructorRepository();
@@ -17,7 +18,7 @@ describe('Feature: creating an instructor', () => {
 
   describe('Scenario: happy path', () => {
     it('should save the instructor', async () => {
-      const command = new CreateInstructorCommand({
+      const command = new CreateInstructorCommand(AuthSeeds.admin(), {
         firstName: 'John',
         lastName: 'Doe',
       });

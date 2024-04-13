@@ -1,5 +1,5 @@
-import { AggregateRoot } from './domain/aggregate-root.js';
-import { DomainEvent } from './domain/domain-event.js';
+import { AggregateRoot } from './lib/aggregate-root.js';
+import { DomainEvent } from './lib/domain-event.js';
 
 export const expectEventToBeRaised = (
   aggregateRoot: AggregateRoot,
