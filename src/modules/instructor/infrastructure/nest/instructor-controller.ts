@@ -1,9 +1,10 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Delete, HttpCode, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { CreateInstructorCommand } from '../../application/commands/create-instructor.js';
 import { RenameInstructorCommand } from '../../application/commands/rename-instructor.js';
 import { AuthSeeds } from '../../../auth/tests/seeds/auth-seeds.js';
+import { DeleteInstructorCommand } from '../../application/commands/delete-instructor.js';
 
 @Controller('instructors')
 export class InstructorController {
@@ -21,6 +22,14 @@ export class InstructorController {
   async renameInstructor(@Body() data: any) {
     return this.commandBus.execute(
       new RenameInstructorCommand(AuthSeeds.admin(), data),
+    );
+  }
+
+  @HttpCode(204)
+  @Delete('delete-instructor')
+  async deleteInstructor(@Body() data: any) {
+    return this.commandBus.execute(
+      new DeleteInstructorCommand(AuthSeeds.admin(), data),
     );
   }
 }

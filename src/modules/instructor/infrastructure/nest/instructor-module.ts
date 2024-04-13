@@ -9,6 +9,7 @@ import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
 import { Instructor } from '../../domain/entities/instructor-entity.js';
 import { CreateInstructorCommandHandler } from '../../application/commands/create-instructor.js';
 import { RenameInstructorCommandHandler } from '../../application/commands/rename-instructor.js';
+import { DeleteInstructorCommandHandler } from '../../application/commands/delete-instructor.js';
 
 @Module({
   imports: [CqrsModule, MikroOrmModule.forFeature([Instructor])],
@@ -28,6 +29,7 @@ import { RenameInstructorCommandHandler } from '../../application/commands/renam
     // Commands & Queries
     CreateInstructorCommandHandler,
     RenameInstructorCommandHandler,
+    DeleteInstructorCommandHandler,
   ],
 })
 export class InstructorModule {}

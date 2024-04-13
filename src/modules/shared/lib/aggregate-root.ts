@@ -14,6 +14,10 @@ export abstract class AggregateRoot {
   private events: DomainEvent[] = [];
 
   raise<T extends Record<string, any>>(event: DomainEvent<T>) {
+    if (!this.events) {
+      this.events = [];
+    }
+
     this.events.push(event);
   }
 

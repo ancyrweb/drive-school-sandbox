@@ -7,8 +7,10 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from '../app/infrastructure/nest/app-module.js';
 import { Nullable } from '../shared/utils/types.js';
+import { IFixture } from './fixture.js';
 
 export class TestApp {
+  static foo = 0;
   public nest: Nullable<NestFastifyApplication> = null;
 
   async setup() {
@@ -28,6 +30,15 @@ export class TestApp {
     // Ensure the database has proper schema
     const orm = this.nest.get(MikroORM);
     await orm.getSchemaGenerator().refreshDatabase();
+  }
+
+  async loadFixtures(fixtures: IFixture[]) {
+    for (const fixture of fixtures) {
+      await fixture.load(this);
+    }
+
+    const orm = this.nest!.get(MikroORM);
+    await orm.em.flush();
   }
 
   async teardown() {

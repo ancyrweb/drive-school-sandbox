@@ -9,4 +9,5 @@ export interface IInstructorRepository {
   create(instructor: Instructor): Promise<void>;
   update(instructor: Instructor): Promise<void>;
   delete(instructor: Instructor): Promise<void>;
+  clear(): Promise<void>;
 }
