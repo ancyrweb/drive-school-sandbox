@@ -1,13 +1,15 @@
 import { Type } from '@mikro-orm/core';
 import { InvariantException } from '../../../shared/exceptions/invariant-exception.js';
 
+export const rolesAsStrings = ['admin', 'student', 'instructor'] as const;
+
 export class Role {
   static ADMIN = new Role('admin');
   static STUDENT = new Role('student');
   static INSTRUCTOR = new Role('instructor');
 
   private constructor(public readonly value: string) {
-    if (value != 'admin' && value != 'student' && value != 'instructor') {
+    if (!rolesAsStrings.includes(value as any)) {
       throw new InvariantException('Invalid user type');
     }
   }

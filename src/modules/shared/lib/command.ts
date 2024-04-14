@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { Nullable } from '../utils/types.js';
 import { AuthContext } from '../../auth/domain/model/auth-context.js';
 import { Role } from '../../auth/domain/entities/role.js';
-import { BadRequestException } from '../exceptions/bad-request-exception.js';
+import { ValidationException } from '../exceptions/validation-exception.js';
 import { NotAuthorizedException } from '../exceptions/not-authorized-exception.js';
 
 /**
@@ -30,7 +30,7 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
 
     const validation = schema.safeParse(this.props);
     if (!validation.success) {
-      throw new BadRequestException();
+      throw new ValidationException(validation.error);
     }
   }
 

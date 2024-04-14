@@ -43,7 +43,7 @@ export abstract class GenericRamRepository<
   }
 
   async clear(): Promise<void> {
-    this.entities = [];
+    this.clearSync();
   }
 
   findByIdSync(id: TId): Nullable<TEntity> {
@@ -52,5 +52,9 @@ export abstract class GenericRamRepository<
 
   createSync(entity: TEntity): void {
     this.entities.push(entity);
+  }
+
+  clearSync(): void {
+    this.entities = [];
   }
 }

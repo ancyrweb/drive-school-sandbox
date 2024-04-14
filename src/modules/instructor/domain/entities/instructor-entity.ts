@@ -5,7 +5,7 @@ import { InstructorRenamedEvent } from '../events/InstructorRenamedEvent.js';
 
 @Entity()
 export class Instructor extends AggregateRoot {
-  @PrimaryKey({ type: InstructorIdType })
+  @PrimaryKey({ type: InstructorIdType, unique: true })
   id: InstructorId;
 
   @Property()
