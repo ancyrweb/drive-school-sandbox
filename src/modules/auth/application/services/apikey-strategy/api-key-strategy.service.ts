@@ -6,6 +6,12 @@ import {
   IAuthenticator,
 } from '../authenticator/authenticator.interface.js';
 
+/**
+ * Provides Apikey authentication
+ * The strategy is configured to read the apikey from the query parameters
+ * Example : https://localhost:3000/api?apikey=123456
+ * Which is a common strategy for apikeys
+ */
 @Injectable()
 export class ApiKeyStrategy extends PassportStrategy(Strategy) {
   constructor(
