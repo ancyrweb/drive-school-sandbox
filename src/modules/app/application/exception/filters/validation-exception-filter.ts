@@ -1,8 +1,9 @@
 import { Catch } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
+
 import { ValidationException } from '../../../../shared/exceptions/validation-exception.js';
 import { ExceptionResponse } from '../exception-response.js';
 import { AbstractExceptionFilter } from './abstract-exception-filter.js';
-import { HttpAdapterHost } from '@nestjs/core';
 
 @Catch(ValidationException)
 export class ValidationExceptionFilter extends AbstractExceptionFilter<ValidationException> {

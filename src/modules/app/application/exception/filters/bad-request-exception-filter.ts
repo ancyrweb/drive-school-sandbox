@@ -1,8 +1,9 @@
 import { Catch } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
+
 import { ExceptionResponse } from '../exception-response.js';
 import { BadRequestException } from '../../../../shared/exceptions/bad-request-exception.js';
 import { AbstractExceptionFilter } from './abstract-exception-filter.js';
-import { HttpAdapterHost } from '@nestjs/core';
 
 @Catch(BadRequestException)
 export class BadRequestExceptionFilter extends AbstractExceptionFilter<BadRequestException> {
@@ -14,7 +15,7 @@ export class BadRequestExceptionFilter extends AbstractExceptionFilter<BadReques
     return {
       statusCode: 400,
       clientCode: 'BAD_REQUEST',
-      message: "Invalid request's payload",
+      message: exception.message,
       payload: null,
     };
   }
