@@ -6,9 +6,9 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AppController } from './app-controller.js';
-import { InstructorModule } from '../../../instructor/infrastructure/nest/instructor-module.js';
-import { Instructor } from '../../../instructor/domain/entities/instructor-entity.js';
 import { DatabaseInterceptor } from './database-interceptor.js';
+import { User } from '../../../auth/domain/entities/user-entity.js';
+import { AuthModule } from '../../../auth/auth-module.js';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { DatabaseInterceptor } from './database-interceptor.js';
           clientUrl:
             'postgresql://driveschool:password123@localhost:5432/driveschool',
           driver: PostgreSqlDriver,
-          entities: [Instructor],
+          entities: [User],
           discovery: {
             warnWhenNoEntities: false,
           },
@@ -36,7 +36,7 @@ import { DatabaseInterceptor } from './database-interceptor.js';
       },
     }),
 
-    InstructorModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

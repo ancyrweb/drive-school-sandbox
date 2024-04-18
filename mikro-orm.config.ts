@@ -4,8 +4,8 @@ import { Migrator } from '@mikro-orm/migrations';
 
 export default defineConfig({
   clientUrl: 'postgresql://driveschool:password123@localhost:5432/driveschool',
-  entities: ['./src/modules/**/domain/*-entity.ts'],
-  entitiesTs: ['./src/modules/**/domain/*-entity.ts'],
+  entities: ['./src/modules/**/domain/entities/*-entity.ts'],
+  entitiesTs: ['./src/modules/**/domain/entities/*-entity.ts'],
   extensions: [Migrator],
   migrations: {
     tableName: 'mikro_orm_migrations',

@@ -9,7 +9,7 @@ import { Inject } from '@nestjs/common';
 import {
   I_PASSWORD_STRATEGY,
   IPasswordStrategy,
-} from '../services/password-strategy/password-strategy.js';
+} from '../services/password-strategy/password-strategy.interface.js';
 import { Role } from '../../domain/entities/role.js';
 import { IDDto } from '../../../shared/domain/id-dto.js';
 import { User } from '../../domain/entities/user-entity.js';
@@ -18,9 +18,9 @@ import { BadRequestException } from '../../../shared/exceptions/bad-request-exce
 import {
   I_API_KEY_GENERATOR,
   IApiKeyGenerator,
-} from '../services/apikey-generator/apikey-generator.js';
+} from '../services/apikey-generator/apikey-generator.interface.js';
 
-export class CreateAccountCommand extends AbstractCommand<{
+export class CreateUserCommand extends AbstractCommand<{
   emailAddress: string;
   password: string;
   role: string;
@@ -38,9 +38,9 @@ export class CreateAccountCommand extends AbstractCommand<{
   }
 }
 
-@CommandHandler(CreateAccountCommand)
-export class CreateAccountCommandHandler
-  implements ICommandHandler<CreateAccountCommand, IDDto>
+@CommandHandler(CreateUserCommand)
+export class CreateUserCommandHandler
+  implements ICommandHandler<CreateUserCommand, IDDto>
 {
   constructor(
     @Inject(I_USER_REPOSITORY) private readonly userRepository: IUserRepository,
@@ -50,7 +50,7 @@ export class CreateAccountCommandHandler
     private readonly apiKeyGenerator: IApiKeyGenerator,
   ) {}
 
-  async execute({ props }: CreateAccountCommand) {
+  async execute({ props }: CreateUserCommand) {
     await this.assertEmailAddressIsAvailable(props.emailAddress);
 
     const user = User.create({

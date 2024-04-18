@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
-import { IPasswordStrategy } from './password-strategy.js';
+import { IPasswordStrategy } from './password-strategy.interface.js';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BcryptStrategy implements IPasswordStrategy {
   async hash(password: string): Promise<string> {
     return bcrypt.hash(password, 10);

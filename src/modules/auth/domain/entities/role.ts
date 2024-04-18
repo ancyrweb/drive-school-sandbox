@@ -1,12 +1,12 @@
 import { Type } from '@mikro-orm/core';
 import { InvariantException } from '../../../shared/exceptions/invariant-exception.js';
 
-export const rolesAsStrings = ['admin', 'student', 'instructor'] as const;
+export const rolesAsStrings = ['ADMIN', 'STUDENT', 'INSTRUCTOR'] as const;
 
 export class Role {
-  static ADMIN = new Role('admin');
-  static STUDENT = new Role('student');
-  static INSTRUCTOR = new Role('instructor');
+  static ADMIN = new Role('ADMIN');
+  static STUDENT = new Role('STUDENT');
+  static INSTRUCTOR = new Role('INSTRUCTOR');
 
   private constructor(public readonly value: string) {
     if (!rolesAsStrings.includes(value as any)) {

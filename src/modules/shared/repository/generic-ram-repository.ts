@@ -8,7 +8,7 @@ export abstract class GenericRamRepository<
   TEntity extends { id: TId },
 > implements IRepository<TId, TEntity>
 {
-  protected entities: TEntity[] = [];
+  constructor(protected entities: TEntity[] = []) {}
 
   async findById(id: TId): Promise<Optional<TEntity>> {
     return Optional.of(

@@ -8,7 +8,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -35,8 +35,8 @@
           "length": 6,
           "mappedType": "datetime"
         },
-        "first_name": {
-          "name": "first_name",
+        "email_address": {
+          "name": "email_address",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
@@ -44,8 +44,26 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "last_name": {
-          "name": "last_name",
+        "password": {
+          "name": "password",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(32)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "api_key": {
+          "name": "api_key",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
@@ -54,11 +72,31 @@
           "mappedType": "string"
         }
       },
-      "name": "instructor",
+      "name": "user",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "instructor_pkey",
+          "columnNames": [
+            "email_address"
+          ],
+          "composite": false,
+          "keyName": "user_email_address_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "api_key"
+          ],
+          "composite": false,
+          "keyName": "user_api_key_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "user_pkey",
           "columnNames": [
             "id"
           ],

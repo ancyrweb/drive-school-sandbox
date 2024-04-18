@@ -2,6 +2,7 @@ import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import { AggregateRoot } from '../../../shared/lib/aggregate-root.js';
 import { UserId, UserIdType } from './user-id.js';
 import { Role, RoleDbType } from './role.js';
+import { UserCreatedEvent } from '../events/user-created-event.js';
 
 @Entity()
 export class User extends AggregateRoot {
@@ -42,6 +43,16 @@ export class User extends AggregateRoot {
     role: Role;
     apiKey: string;
   }) {
-    return new User(props);
+    const user = new User(props);
+    user.raise(
+      new UserCreatedEvent({
+        id: user.id.value,
+        emailAddress: user.emailAddress,
+        role: user.role.value,
+        apiKey: user.apiKey,
+      }),
+    );
+
+    return user;
   }
 }
