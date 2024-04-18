@@ -1,4 +1,4 @@
-import { Role } from '../entities/role.js';
+import { Role } from './role.js';
 import { UserId } from '../entities/user-id.js';
 
 export class AuthContext {

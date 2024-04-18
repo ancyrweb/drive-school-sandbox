@@ -1,12 +1,12 @@
 import { UserId } from '../../../domain/entities/user-id.js';
 import { User } from '../../../domain/entities/user-entity.js';
-import { IUserRepository } from '../../../application/ports/user-repository.js';
+import { IInstructorRepository } from '../../../application/ports/instructor-repository.js';
 import { GenericSqlRepository } from '../../../../shared/repository/generic-sql-repository.js';
 import { Optional } from '../../../../shared/utils/optional.js';
 
 export class SqlUserRepository
   extends GenericSqlRepository<UserId, User>
-  implements IUserRepository
+  implements IInstructorRepository
 {
   async findByApiKey(apiKey: string): Promise<Optional<User>> {
     const user = await this.repository.findOne({ apiKey });

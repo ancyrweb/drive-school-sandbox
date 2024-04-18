@@ -1,10 +1,11 @@
 import { Property } from '@mikro-orm/core';
 import { DomainEvent } from './domain-event.js';
+import { BaseEntity } from './base-entity.js';
 
 /**
  * Base class for all aggregate roots.
  */
-export abstract class AggregateRoot {
+export abstract class AggregateRoot extends BaseEntity {
   @Property()
   createdAt: Date = new Date();
 

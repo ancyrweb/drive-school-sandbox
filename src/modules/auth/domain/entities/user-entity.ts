@@ -1,14 +1,17 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, OneToOne, Property } from '@mikro-orm/core';
 import { AggregateRoot } from '../../../shared/lib/aggregate-root.js';
-import { UserId, UserIdType } from './user-id.js';
-import { Role, RoleDbType } from './role.js';
-import { UserCreatedEvent } from '../events/user-created-event.js';
+import { Role, RoleDbType } from '../model/role.js';
+import { ApikeyEntity } from './apikey-entity.js';
 
-@Entity()
-export class User extends AggregateRoot {
-  @PrimaryKey({ type: UserIdType, unique: true })
-  id: UserId;
+export type UserCreationProps = {
+  emailAddress: string;
+  password: string;
+  role: Role;
+  apiKey: ApikeyEntity;
+};
 
+@Entity({ abstract: true })
+export abstract class User extends AggregateRoot {
   @Property({ unique: true })
   emailAddress: string;
 
@@ -18,41 +21,14 @@ export class User extends AggregateRoot {
   @Property({ type: RoleDbType })
   role: Role;
 
-  @Property({ unique: true })
-  apiKey: string;
+  @OneToOne()
+  apiKey: ApikeyEntity;
 
-  constructor(props: {
-    id: UserId;
-    emailAddress: string;
-    password: string;
-    role: Role;
-    apiKey: string;
-  }) {
+  protected constructor(props: UserCreationProps) {
     super();
-    this.id = props.id;
     this.emailAddress = props.emailAddress;
     this.password = props.password;
     this.role = props.role;
     this.apiKey = props.apiKey;
-  }
-
-  static create(props: {
-    id: UserId;
-    emailAddress: string;
-    password: string;
-    role: Role;
-    apiKey: string;
-  }) {
-    const user = new User(props);
-    user.raise(
-      new UserCreatedEvent({
-        id: user.id.value,
-        emailAddress: user.emailAddress,
-        role: user.role.value,
-        apiKey: user.apiKey,
-      }),
-    );
-
-    return user;
   }
 }

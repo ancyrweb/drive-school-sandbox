@@ -1,5 +1,5 @@
 import { AuthContext } from '../../domain/model/auth-context.js';
-import { Role } from '../../domain/entities/role.js';
+import { Role } from '../../domain/model/role.js';
 import { UserId } from '../../domain/entities/user-id.js';
 
 export class AuthSeeds {

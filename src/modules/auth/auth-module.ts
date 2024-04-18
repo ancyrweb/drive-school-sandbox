@@ -4,9 +4,9 @@ import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from './domain/entities/user-entity.js';
 import { I_API_KEY_GENERATOR } from './application/services/apikey-generator/apikey-generator.interface.js';
 import { ApikeyGenerator } from './application/services/apikey-generator/apikey-generator.js';
-import { I_USER_REPOSITORY } from './application/ports/user-repository.js';
+import { I_INSTRUCTOR_REPOSITORY } from './application/ports/instructor-repository.js';
 import { SqlUserRepository } from './infrastructure/persistence/sql/sql-user-repository.js';
-import { CreateUserCommandHandler } from './application/commands/create-user.js';
+import { CreateInstructorCommandHandler } from './application/commands/create-instructor.js';
 import { I_PASSWORD_STRATEGY } from './application/services/password-strategy/password-strategy.interface.js';
 import { Argon2Strategy } from './application/services/password-strategy/argon2-strategy.js';
 import { I_AUTHENTICATOR } from './application/services/authenticator/authenticator.interface.js';
@@ -23,7 +23,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
   providers: [
     // Adapters
     {
-      provide: I_USER_REPOSITORY,
+      provide: I_INSTRUCTOR_REPOSITORY,
       inject: [getRepositoryToken(User), EntityManager],
       useFactory: (repository, em) => new SqlUserRepository(repository, em),
     },
@@ -46,7 +46,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
     },
     ApiKeyStrategy,
     // Commands & Queries
-    CreateUserCommandHandler,
+    CreateInstructorCommandHandler,
   ],
   exports: [],
 })

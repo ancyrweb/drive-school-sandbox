@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Nullable } from '../utils/types.js';
 import { AuthContext } from '../../auth/domain/model/auth-context.js';
-import { Role } from '../../auth/domain/entities/role.js';
+import { Role } from '../../auth/domain/model/role.js';
 import { ValidationException } from '../exceptions/validation-exception.js';
 import { NotAuthorizedException } from '../exceptions/not-authorized-exception.js';
 
