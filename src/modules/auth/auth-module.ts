@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
-import { User } from './domain/entities/user-entity.js';
+import { SqlUserEntity } from './infrastructure/persistence/sql/entities/sql-user-entity.js';
 import { I_API_KEY_GENERATOR } from './application/services/apikey-generator/apikey-generator.interface.js';
 import { ApikeyGenerator } from './application/services/apikey-generator/apikey-generator.js';
 import { I_INSTRUCTOR_REPOSITORY } from './application/ports/instructor-repository.js';
@@ -18,13 +18,13 @@ import { AppAuthGuard } from './application/services/app-auth-guard/app-auth-gua
 import { EntityManager } from '@mikro-orm/postgresql';
 
 @Module({
-  imports: [CqrsModule, MikroOrmModule.forFeature([User])],
+  imports: [CqrsModule, MikroOrmModule.forFeature([SqlUserEntity])],
   controllers: [AuthController],
   providers: [
     // Adapters
     {
       provide: I_INSTRUCTOR_REPOSITORY,
-      inject: [getRepositoryToken(User), EntityManager],
+      inject: [getRepositoryToken(SqlUserEntity), EntityManager],
       useFactory: (repository, em) => new SqlUserRepository(repository, em),
     },
     // Services

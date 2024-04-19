@@ -1,16 +1,16 @@
 import { IApiKeyGenerator } from './apikey-generator.interface.js';
-import {
-  I_INSTRUCTOR_REPOSITORY,
-  IInstructorRepository,
-} from '../../ports/instructor-repository.js';
 import { Inject, Injectable } from '@nestjs/common';
-import { ApikeyEntity } from '../../../domain/entities/apikey-entity.js';
+import {
+  I_USER_REPOSITORY,
+  IUserRepository,
+} from '../../ports/user-repository.js';
+import { Apikey } from '../../../domain/entities/apikey.js';
 
 @Injectable()
 export class ApikeyGenerator implements IApiKeyGenerator {
   constructor(
-    @Inject(I_INSTRUCTOR_REPOSITORY)
-    private readonly userRepository: IInstructorRepository,
+    @Inject(I_USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
   ) {}
 
   protected randomString() {
@@ -22,7 +22,7 @@ export class ApikeyGenerator implements IApiKeyGenerator {
       const nextApiKey = this.randomString();
       const userWithApikey = await this.userRepository.findByApiKey(nextApiKey);
       if (userWithApikey.isNull()) {
-        return ApikeyEntity.generate(nextApiKey);
+        return Apikey.generate(nextApiKey);
       }
     }
 

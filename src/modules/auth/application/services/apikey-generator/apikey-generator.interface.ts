@@ -1,4 +1,4 @@
-import { ApikeyEntity } from '../../../domain/entities/apikey-entity.js';
+import { Apikey } from '../../../domain/entities/apikey.js';
 
 export const I_API_KEY_GENERATOR = Symbol('I_API_KEY_GENERATOR');
 
@@ -7,5 +7,5 @@ export const I_API_KEY_GENERATOR = Symbol('I_API_KEY_GENERATOR');
  * The generated apikeys must be unique
  */
 export interface IApiKeyGenerator {
-  generate(): Promise<ApikeyEntity>;
+  generate(): Promise<Apikey>;
 }

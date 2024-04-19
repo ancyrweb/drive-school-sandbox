@@ -11,19 +11,28 @@ import {
   IPasswordStrategy,
 } from '../services/password-strategy/password-strategy.interface.js';
 import { Role } from '../../domain/model/role.js';
-import { IDDto } from '../../../shared/domain/id-dto.js';
 import { BadRequestException } from '../../../shared/exceptions/bad-request-exception.js';
 import {
   I_API_KEY_GENERATOR,
   IApiKeyGenerator,
 } from '../services/apikey-generator/apikey-generator.interface.js';
-import { Instructor } from '../../domain/entities/instructor-entity.js';
 import { InstructorId } from '../../domain/entities/instructor-id.js';
+import {
+  I_USER_REPOSITORY,
+  IUserRepository,
+} from '../ports/user-repository.js';
+import { UserId } from '../../domain/entities/user-id.js';
+import { User } from '../../domain/entities/user.js';
+import { Instructor } from '../../domain/entities/instructor.js';
+
+type Output = {
+  instructorId: string;
+  userId: string;
+};
 
 export class CreateInstructor extends AbstractCommand<{
   emailAddress: string;
   password: string;
-  role: string;
   firstName: string;
   lastName: string;
 }> {
@@ -31,7 +40,6 @@ export class CreateInstructor extends AbstractCommand<{
     return z.object({
       emailAddress: z.string().email(),
       password: z.string().min(8).max(128),
-      role: z.string(),
       firstName: z.string(),
       lastName: z.string(),
     });
@@ -44,11 +52,13 @@ export class CreateInstructor extends AbstractCommand<{
 
 @CommandHandler(CreateInstructor)
 export class CreateInstructorCommandHandler
-  implements ICommandHandler<CreateInstructor, IDDto>
+  implements ICommandHandler<CreateInstructor, Output>
 {
   constructor(
+    @Inject(I_USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
     @Inject(I_INSTRUCTOR_REPOSITORY)
-    private readonly userRepository: IInstructorRepository,
+    private readonly instructorRepository: IInstructorRepository,
     @Inject(I_PASSWORD_STRATEGY)
     private readonly passwordStrategy: IPasswordStrategy,
     @Inject(I_API_KEY_GENERATOR)
@@ -58,20 +68,26 @@ export class CreateInstructorCommandHandler
   async execute({ props }: CreateInstructor) {
     await this.assertEmailAddressIsAvailable(props.emailAddress);
 
-    const user = Instructor.create({
+    const instructor = new Instructor({
       id: new InstructorId(),
       firstName: props.firstName,
       lastName: props.lastName,
+    });
+
+    const user = new User({
+      id: new UserId(),
+      accountId: instructor.getId(),
       emailAddress: props.emailAddress,
       password: await this.passwordStrategy.hash(props.password),
       apiKey: await this.apiKeyGenerator.generate(),
-      role: Role.create(props.role),
     });
 
     await this.userRepository.create(user);
+    await this.instructorRepository.create(instructor);
 
     return {
-      id: user.id.value,
+      instructorId: instructor.getId().asString(),
+      userId: user.getId().asString(),
     };
   }
 

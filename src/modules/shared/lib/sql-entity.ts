@@ -3,7 +3,7 @@ import { Property } from '@mikro-orm/core';
 /**
  * Base class for all entities
  */
-export abstract class BaseEntity {
+export abstract class SqlEntity {
   @Property()
   createdAt: Date = new Date();
 

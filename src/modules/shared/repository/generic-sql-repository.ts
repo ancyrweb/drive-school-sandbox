@@ -2,10 +2,11 @@ import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { Optional } from '../utils/optional.js';
 import { IRepository } from './repository.js';
 import { BrandedId } from '../lib/id.js';
+import { AggregateRoot } from '../lib/aggregate-root.js';
 
 export abstract class GenericSqlRepository<
   TId extends BrandedId<any>,
-  TEntity extends { id: TId },
+  TEntity extends AggregateRoot<TId, any, any>,
 > implements IRepository<TId, TEntity>
 {
   constructor(

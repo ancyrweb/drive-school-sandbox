@@ -1,28 +1,22 @@
-import { Property } from '@mikro-orm/core';
 import { DomainEvent } from './domain-event.js';
-import { BaseEntity } from './base-entity.js';
+import { Entity } from './entity.js';
 
-/**
- * Base class for all aggregate roots.
- */
-export abstract class AggregateRoot extends BaseEntity {
-  @Property()
-  createdAt: Date = new Date();
+export abstract class AggregateRoot<
+  TId,
+  TState extends { id: TId },
+  TSnapshot,
+> extends Entity<TId, TState, TSnapshot> {
+  private _events: DomainEvent[] = [];
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
-
-  private events: DomainEvent[] = [];
-
-  raise<T extends Record<string, any>>(event: DomainEvent<T>) {
-    if (!this.events) {
-      this.events = [];
-    }
-
-    this.events.push(event);
+  protected raise(event: DomainEvent) {
+    this._events.push(event);
   }
 
-  getEvents(): DomainEvent[] {
-    return this.events;
+  public getEvents(): DomainEvent[] {
+    return this._events.slice();
+  }
+
+  public clearEvents() {
+    this._events = [];
   }
 }

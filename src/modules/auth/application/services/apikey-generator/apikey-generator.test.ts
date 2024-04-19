@@ -1,9 +1,9 @@
 import { ApikeyGenerator } from './apikey-generator.js';
-import { RamInstructorRepository } from '../../../infrastructure/persistence/ram/ram-instructor-repository.js';
-import { Role } from '../../../domain/model/role.js';
-import { Instructor } from '../../../domain/entities/instructor-entity.js';
-import { ApikeyEntity } from '../../../domain/entities/apikey-entity.js';
 import { InstructorId } from '../../../domain/entities/instructor-id.js';
+import { RamUserRepository } from '../../../infrastructure/persistence/ram/ram-user-repository.js';
+import { UserId } from '../../../domain/entities/user-id.js';
+import { User } from '../../../domain/entities/user.js';
+import { Apikey } from '../../../domain/entities/apikey.js';
 
 class TestableRandomApiKeyGenerator extends ApikeyGenerator {
   private availableKeys = ['key1', 'key2'];
@@ -15,28 +15,26 @@ class TestableRandomApiKeyGenerator extends ApikeyGenerator {
 }
 
 test('when the apikey is available, it should use the first one', async () => {
-  const userRepository = new RamInstructorRepository();
+  const userRepository = new RamUserRepository();
   const generator = new TestableRandomApiKeyGenerator(userRepository);
 
   const apikey = await generator.generate();
-  expect(apikey.value).toBe('key1');
+  expect(apikey.getValue()).toBe('key1');
 });
 
 test('when the apikey is not available, should pick another one', async () => {
-  const userRepository = new RamInstructorRepository([
-    Instructor.create({
-      id: new InstructorId(),
+  const userRepository = new RamUserRepository([
+    new User({
+      id: new UserId(),
+      accountId: new InstructorId(),
       emailAddress: 'johndoe@gmail.com',
-      password: 'azerty',
-      role: Role.ADMIN,
-      apiKey: ApikeyEntity.generate('key1'),
-      firstName: 'John',
-      lastName: 'Doe',
+      password: 'azerty123',
+      apiKey: Apikey.generate('key1'),
     }),
   ]);
 
   const generator = new TestableRandomApiKeyGenerator(userRepository);
 
   const apikey = await generator.generate();
-  expect(apikey.value).toBe('key2');
+  expect(apikey.getValue()).toBe('key2');
 });

@@ -22,6 +22,10 @@ export class BrandedId<T extends string> {
   __brand: T;
 
   constructor(public readonly value: string = IdProvider.generate()) {}
+
+  public asString() {
+    return this.value;
+  }
 }
 
 /**

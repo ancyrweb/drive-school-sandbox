@@ -1,8 +1,8 @@
-import { AggregateRoot } from './lib/aggregate-root.js';
+import { SqlAggregateRoot } from './lib/sql-aggregate-root.js';
 import { DomainEvent } from './lib/domain-event.js';
 
 export const expectEventToBeRaised = (
-  aggregateRoot: AggregateRoot,
+  aggregateRoot: SqlAggregateRoot,
   event: DomainEvent,
 ) => {
   const matchingEvent = aggregateRoot

@@ -1,11 +1,14 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-import { ApikeyId, ApikeyIdType } from './apikey-id.js';
-import { BaseEntity } from '../../../shared/lib/base-entity.js';
+import {
+  ApikeyId,
+  ApikeyIdType,
+} from '../../../../domain/entities/apikey-id.js';
+import { SqlEntity } from '../../../../../shared/lib/sql-entity.js';
 
 export type ApikeyCreationProps = { id?: ApikeyId; value: string };
 
 @Entity()
-export class ApikeyEntity extends BaseEntity {
+export class SqlApikeyEntity extends SqlEntity {
   @PrimaryKey({ type: ApikeyIdType, unique: true })
   id: ApikeyId;
 
@@ -19,6 +22,6 @@ export class ApikeyEntity extends BaseEntity {
   }
 
   static generate(value: string) {
-    return new ApikeyEntity({ value });
+    return new SqlApikeyEntity({ value });
   }
 }
