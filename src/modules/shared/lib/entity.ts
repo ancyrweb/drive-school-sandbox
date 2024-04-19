@@ -2,7 +2,7 @@ export abstract class Entity<TId, TState extends { id: TId }, TSnapshot> {
   protected _state: TState;
   abstract takeSnapshot(): TSnapshot;
 
-  constructor(state: TState) {
+  protected constructor(state: TState) {
     this._state = state;
   }
 

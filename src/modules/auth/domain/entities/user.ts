@@ -14,6 +14,8 @@ type State = {
   apiKey: Apikey;
 };
 
+type Props = State;
+
 type Snapshot = {
   id: string;
   account: {
@@ -25,6 +27,10 @@ type Snapshot = {
 };
 
 export class User extends AggregateRoot<UserId, State, Snapshot> {
+  static create(props: Props): User {
+    return new User(props);
+  }
+
   takeSnapshot(): Snapshot {
     const getAccountSnapshot = () => {
       if (this._state.accountId instanceof InstructorId) {

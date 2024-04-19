@@ -7,6 +7,8 @@ type State = {
   lastName: string;
 };
 
+type Props = State;
+
 type Snapshot = {
   id: string;
   firstName: string;
@@ -14,6 +16,10 @@ type Snapshot = {
 };
 
 export class Instructor extends AggregateRoot<InstructorId, State, Snapshot> {
+  static create(props: Props): Instructor {
+    return new Instructor(props);
+  }
+
   takeSnapshot(): Snapshot {
     return {
       id: this._state.id.value,

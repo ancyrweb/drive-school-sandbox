@@ -87,7 +87,7 @@ describe('Feature: creating an instructor', () => {
   describe('Scenario: the e-mail address is already taken', () => {
     beforeEach(() => {
       userRepository.createSync(
-        new User({
+        User.create({
           id: new UserId(),
           accountId: new InstructorId(),
           emailAddress: 'johndoe@gmail.com',

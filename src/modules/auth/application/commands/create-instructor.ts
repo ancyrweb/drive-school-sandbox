@@ -68,13 +68,13 @@ export class CreateInstructorCommandHandler
   async execute({ props }: CreateInstructor) {
     await this.assertEmailAddressIsAvailable(props.emailAddress);
 
-    const instructor = new Instructor({
+    const instructor = Instructor.create({
       id: new InstructorId(),
       firstName: props.firstName,
       lastName: props.lastName,
     });
 
-    const user = new User({
+    const user = User.create({
       id: new UserId(),
       accountId: instructor.getId(),
       emailAddress: props.emailAddress,

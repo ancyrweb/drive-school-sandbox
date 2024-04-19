@@ -24,7 +24,7 @@ test('when the apikey is available, it should use the first one', async () => {
 
 test('when the apikey is not available, should pick another one', async () => {
   const userRepository = new RamUserRepository([
-    new User({
+    User.create({
       id: new UserId(),
       accountId: new InstructorId(),
       emailAddress: 'johndoe@gmail.com',
