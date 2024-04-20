@@ -6,6 +6,8 @@ type State = {
   value: string;
 };
 
+type Props = State;
+
 type Snapshot = {
   id: string;
   value: string;
@@ -17,6 +19,10 @@ export class Apikey extends Entity<ApikeyId, State, Snapshot> {
       id: this._state.id.value,
       value: this._state.value,
     };
+  }
+
+  static create(props: Props): Apikey {
+    return new Apikey(props);
   }
 
   static generate(value: string) {

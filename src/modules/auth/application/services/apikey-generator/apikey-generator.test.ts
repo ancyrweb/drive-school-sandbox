@@ -29,7 +29,7 @@ test('when the apikey is not available, should pick another one', async () => {
       accountId: new InstructorId(),
       emailAddress: 'johndoe@gmail.com',
       password: 'azerty123',
-      apiKey: Apikey.generate('key1'),
+      apikey: Apikey.generate('key1'),
     }),
   ]);
 

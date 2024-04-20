@@ -2,9 +2,10 @@ import { GenericRamRepository } from '../../../../shared/repository/generic-ram-
 import { Optional } from '../../../../shared/utils/optional.js';
 import { IUserRepository } from '../../../application/ports/user-repository.js';
 import { User } from '../../../domain/entities/user.js';
+import { UserId } from '../../../domain/entities/user-id.js';
 
 export class RamUserRepository
-  extends GenericRamRepository<User>
+  extends GenericRamRepository<UserId, User>
   implements IUserRepository
 {
   async findByApiKey(apiKey: string): Promise<Optional<User>> {

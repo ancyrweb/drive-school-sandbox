@@ -1,34 +1,38 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { Optional } from '../utils/optional.js';
 import { IRepository } from './repository.js';
-import { BrandedId } from '../lib/id.js';
 import { AggregateRoot } from '../lib/aggregate-root.js';
+import { SqlEntity } from '../lib/sql-entity.js';
+import { Mapper } from '../lib/mapper.js';
+import { BrandedId } from '../lib/id.js';
 
 export abstract class GenericSqlRepository<
   TId extends BrandedId<any>,
-  TEntity extends AggregateRoot<TId, any, any>,
-> implements IRepository<TId, TEntity>
+  TDomain extends AggregateRoot<TId, any, any>,
+  TPersistence extends SqlEntity<any>,
+> implements IRepository<TId, TDomain>
 {
+  abstract mapper: Mapper<TDomain, TPersistence>;
+
   constructor(
-    protected readonly repository: EntityRepository<TEntity>,
+    protected readonly repository: EntityRepository<TPersistence>,
     protected readonly em: EntityManager,
   ) {}
 
-  async findById(id: TId) {
-    const result = await this.repository.findOne({ id } as any);
-    return Optional.of(result ?? null);
+  async findById(id: TId): Promise<Optional<TDomain>> {
+    const result = await this.repository.findOne({ id: id.value } as any);
+
+    return result
+      ? Optional.of(this.mapper.toDomain(result))
+      : Optional.empty();
   }
 
-  async create(entity: TEntity) {
-    this.em.persist(entity);
+  async save(entity: TDomain) {
+    this.em.persist(this.mapper.toPersistence(entity));
   }
 
-  async update(entity: TEntity) {
-    this.em.persist(entity);
-  }
-
-  async delete(entity: TEntity) {
-    this.em.remove(entity);
+  async delete(entity: TDomain) {
+    this.em.remove(this.mapper.toPersistence(entity));
   }
 
   async clear() {

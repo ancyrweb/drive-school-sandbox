@@ -1,8 +1,9 @@
 import { DomainEvent } from './domain-event.js';
 import { Entity } from './entity.js';
+import { BrandedId } from './id.js';
 
 export abstract class AggregateRoot<
-  TId,
+  TId extends BrandedId<any>,
   TState extends { id: TId },
   TSnapshot,
 > extends Entity<TId, TState, TSnapshot> {

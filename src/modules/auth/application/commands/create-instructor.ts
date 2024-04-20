@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { AbstractCommand } from '../../../shared/lib/command.js';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
+import { AbstractCommand } from '../../../shared/lib/command.js';
 import {
   I_INSTRUCTOR_REPOSITORY,
   IInstructorRepository,
@@ -68,22 +69,22 @@ export class CreateInstructorCommandHandler
   async execute({ props }: CreateInstructor) {
     await this.assertEmailAddressIsAvailable(props.emailAddress);
 
-    const instructor = Instructor.create({
+    const instructor = Instructor.newAccount({
       id: new InstructorId(),
       firstName: props.firstName,
       lastName: props.lastName,
     });
 
-    const user = User.create({
+    const user = User.newAccount({
       id: new UserId(),
       accountId: instructor.getId(),
       emailAddress: props.emailAddress,
       password: await this.passwordStrategy.hash(props.password),
-      apiKey: await this.apiKeyGenerator.generate(),
+      apikey: await this.apiKeyGenerator.generate(),
     });
 
-    await this.userRepository.create(user);
-    await this.instructorRepository.create(instructor);
+    await this.userRepository.save(user);
+    await this.instructorRepository.save(instructor);
 
     return {
       instructorId: instructor.getId().asString(),

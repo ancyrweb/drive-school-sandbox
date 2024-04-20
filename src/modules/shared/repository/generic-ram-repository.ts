@@ -3,38 +3,31 @@ import { IRepository } from './repository.js';
 import { Nullable } from '../utils/types.js';
 import { AggregateRoot } from '../lib/aggregate-root.js';
 import { GetId } from '../lib/entity.js';
+import { BrandedId } from '../lib/id.js';
 
 export abstract class GenericRamRepository<
-  TEntity extends AggregateRoot<any, any, any>,
-> implements IRepository<GetId<TEntity>, TEntity>
+  TId extends BrandedId<any>,
+  TEntity extends AggregateRoot<TId, any, any>,
+> implements IRepository<TId, TEntity>
 {
   constructor(protected entities: TEntity[] = []) {}
 
-  async findById(id: GetId<TEntity>): Promise<Optional<TEntity>> {
+  async findById(id: TId): Promise<Optional<TEntity>> {
     return Optional.of(
-      this.entities.find((entity) => entity.getId().value === id.value) ?? null,
+      this.entities.find((entity) => entity.getId().value === id.asString()) ??
+        null,
     );
   }
 
-  async create(entity: TEntity): Promise<void> {
-    this.createSync(entity);
-  }
-
-  async update(entity: TEntity): Promise<void> {
-    const index = this.entities.findIndex(
-      (e) => entity.getId().value === e.getId().value,
-    );
-    if (index === -1) {
-      throw new Error('Entity not found');
-    }
-
-    this.entities[index] = entity;
+  async save(entity: TEntity): Promise<void> {
+    return this.saveSync(entity);
   }
 
   async delete(entity: TEntity): Promise<void> {
     const index = this.entities.findIndex(
-      (e) => entity.getId().value === e.getId().value,
+      (e) => entity.getId().asString() === e.getId().asString(),
     );
+
     if (index === -1) {
       throw new Error('Entity not found');
     }
@@ -48,12 +41,23 @@ export abstract class GenericRamRepository<
 
   findByIdSync(id: GetId<TEntity>): Nullable<TEntity> {
     return (
-      this.entities.find((entity) => entity.getId().value === id.value) ?? null
+      this.entities.find(
+        (entity) => entity.getId().asString() === id.asString(),
+      ) ?? null
     );
   }
 
-  createSync(entity: TEntity): void {
-    this.entities.push(entity);
+  saveSync(entity: TEntity): void {
+    const index = this.entities.findIndex(
+      (e) => entity.getId().asString() === e.getId().asString(),
+    );
+
+    if (index === -1) {
+      this.entities.push(entity);
+      return;
+    }
+
+    this.entities[index] = entity;
   }
 
   clearSync(): void {

@@ -9,8 +9,7 @@ export interface IUserRepository {
   findByApiKey(value: string): Promise<Optional<User>>;
   isEmailAddressAvailable(emailAddress: string): Promise<boolean>;
 
-  create(instructor: User): Promise<void>;
-  update(instructor: User): Promise<void>;
-  delete(instructor: User): Promise<void>;
+  save(user: User): Promise<void>;
+  delete(user: User): Promise<void>;
   clear(): Promise<void>;
 }

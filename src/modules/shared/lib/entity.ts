@@ -1,4 +1,10 @@
-export abstract class Entity<TId, TState extends { id: TId }, TSnapshot> {
+import { BrandedId } from './id.js';
+
+export abstract class Entity<
+  TId extends BrandedId<any>,
+  TState extends { id: TId },
+  TSnapshot,
+> {
   protected _state: TState;
   abstract takeSnapshot(): TSnapshot;
 
@@ -6,7 +12,7 @@ export abstract class Entity<TId, TState extends { id: TId }, TSnapshot> {
     this._state = state;
   }
 
-  getId() {
+  getId(): TId {
     return this._state.id;
   }
 }

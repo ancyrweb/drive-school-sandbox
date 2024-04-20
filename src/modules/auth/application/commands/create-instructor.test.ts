@@ -12,6 +12,9 @@ import { RamUserRepository } from '../../infrastructure/persistence/ram/ram-user
 import { UserId } from '../../domain/entities/user-id.js';
 import { Apikey } from '../../domain/entities/apikey.js';
 import { User } from '../../domain/entities/user.js';
+import { UserCreatedEvent } from '../../domain/events/user-created-event.js';
+import { expectEventToBeRaised } from '../../../shared/utils/test-utils.js';
+import { InstructorCreatedEvent } from '../../domain/events/instructor-created-event.js';
 
 class StubApiKeyGenerator implements IApiKeyGenerator {
   static VALUE = '123456';
@@ -62,6 +65,35 @@ describe('Feature: creating an instructor', () => {
       expect(instructor.lastName).toEqual('Doe');
     });
 
+    it('should generate events', async () => {
+      const result = await commandHandler.execute(command);
+      const instructor = instructorRepository.findByIdSync(
+        new InstructorId(result.instructorId),
+      )!;
+      const user = userRepository.findByIdSync(new UserId(result.userId))!;
+
+      expectEventToBeRaised(
+        user.getEvents(),
+        new UserCreatedEvent({
+          id: result.userId,
+          account: {
+            type: 'instructor',
+            id: result.instructorId,
+          },
+          emailAddress: 'johndoe@gmail.com',
+        }),
+      );
+
+      expectEventToBeRaised(
+        instructor.getEvents(),
+        new InstructorCreatedEvent({
+          id: result.instructorId,
+          firstName: 'John',
+          lastName: 'Doe',
+        }),
+      );
+    });
+
     it('should generate an apikey', async () => {
       const result = await commandHandler.execute(command);
       const user = userRepository
@@ -86,13 +118,13 @@ describe('Feature: creating an instructor', () => {
 
   describe('Scenario: the e-mail address is already taken', () => {
     beforeEach(() => {
-      userRepository.createSync(
+      userRepository.saveSync(
         User.create({
           id: new UserId(),
           accountId: new InstructorId(),
           emailAddress: 'johndoe@gmail.com',
           password: 'azerty123',
-          apiKey: Apikey.generate('123456'),
+          apikey: Apikey.generate('123456'),
         }),
       );
     });

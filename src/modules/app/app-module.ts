@@ -7,11 +7,13 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AppController } from './application/controllers/app-controller.js';
 import { DatabaseInterceptor } from './application/interceptors/database-interceptor.js';
-import { SqlUserEntity } from '../auth/infrastructure/persistence/sql/entities/sql-user-entity.js';
+import { SqlUser } from '../auth/infrastructure/persistence/sql/entities/sql-user.js';
 import { AuthModule } from '../auth/auth-module.js';
 import { ValidationExceptionFilter } from './application/exception/filters/validation-exception-filter.js';
 import { BadRequestExceptionFilter } from './application/exception/filters/bad-request-exception-filter.js';
 import { HttpExceptionFilter } from './application/exception/filters/http-exception-filter.js';
+import { SqlApikey } from '../auth/infrastructure/persistence/sql/entities/sql-apikey.js';
+import { SqlInstructor } from '../auth/infrastructure/persistence/sql/entities/sql-instructor.js';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { HttpExceptionFilter } from './application/exception/filters/http-except
           clientUrl:
             'postgresql://driveschool:password123@localhost:5432/driveschool',
           driver: PostgreSqlDriver,
-          entities: [SqlUserEntity],
+          entities: [SqlUser, SqlApikey, SqlInstructor],
           discovery: {
             warnWhenNoEntities: false,
           },
