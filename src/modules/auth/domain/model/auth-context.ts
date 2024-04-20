@@ -13,4 +13,12 @@ export class AuthContext {
   getAccountType() {
     return this.account.type;
   }
+
+  getAccountId() {
+    return this.account.id;
+  }
+
+  isAdmin() {
+    return this.account.type === 'admin';
+  }
 }

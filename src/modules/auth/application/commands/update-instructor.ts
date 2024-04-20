@@ -7,9 +7,12 @@ import {
   I_INSTRUCTOR_REPOSITORY,
   IInstructorRepository,
 } from '../ports/instructor-repository.js';
-import { Role } from '../../domain/model/role.js';
 import { InstructorId } from '../../domain/entities/instructor-id.js';
 import { NotFoundException } from '../../../shared/exceptions/not-found-exception.js';
+import { AccountType } from '../../domain/model/account.js';
+import { AuthContext } from '../../domain/model/auth-context.js';
+import { Instructor } from '../../domain/entities/instructor.js';
+import { NotAuthorizedException } from '../../../shared/exceptions/not-authorized-exception.js';
 
 export class UpdateInstructor extends AbstractCommand<{
   instructorId: string;
@@ -28,8 +31,8 @@ export class UpdateInstructor extends AbstractCommand<{
     });
   }
 
-  protected requires(): Role[] {
-    return [Role.ADMIN];
+  protected requires(): AccountType[] {
+    return ['admin', 'instructor'];
   }
 }
 
@@ -42,7 +45,7 @@ export class UpdateInstructorCommandHandler
     private readonly instructorRepository: IInstructorRepository,
   ) {}
 
-  async execute({ props }: UpdateInstructor) {
+  async execute({ auth, props }: UpdateInstructor) {
     const instructor = await this.instructorRepository
       .findById(new InstructorId(props.instructorId))
       .then((q) =>
@@ -51,8 +54,22 @@ export class UpdateInstructorCommandHandler
         ),
       );
 
+    this.verifyAuthorization(auth, instructor);
+
     instructor.update(props.payload);
 
     await this.instructorRepository.save(instructor);
+  }
+
+  verifyAuthorization(auth: AuthContext, instructor: Instructor) {
+    if (auth.isAdmin()) {
+      return;
+    }
+
+    if (auth.getAccountId().equals(instructor.getId())) {
+      return;
+    }
+
+    throw new NotAuthorizedException();
   }
 }

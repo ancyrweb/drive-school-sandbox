@@ -55,6 +55,7 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
   /**
    * Returns a list of roles that are allowed to execute this command.
    * If the list is empty, the command is allowed to be executed by any authenticated user.
+   * For more granular control, implement your own logic inside the command handler
    * @protected
    */
   protected requires(): AccountType[] {

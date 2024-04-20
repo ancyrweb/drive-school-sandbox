@@ -26,6 +26,10 @@ export class BrandedId<T extends string> {
   public asString() {
     return this.value;
   }
+
+  public equals(other: BrandedId<any>) {
+    return this.__brand === other.__brand && this.value === other.value;
+  }
 }
 
 /**

@@ -14,8 +14,7 @@ export abstract class GenericRamRepository<
 
   async findById(id: TId): Promise<Optional<TEntity>> {
     return Optional.of(
-      this.entities.find((entity) => entity.getId().value === id.asString()) ??
-        null,
+      this.entities.find((entity) => entity.getId().equals(id)) ?? null,
     );
   }
 
@@ -24,8 +23,8 @@ export abstract class GenericRamRepository<
   }
 
   async delete(entity: TEntity): Promise<void> {
-    const index = this.entities.findIndex(
-      (e) => entity.getId().asString() === e.getId().asString(),
+    const index = this.entities.findIndex((e) =>
+      entity.getId().equals(e.getId()),
     );
 
     if (index === -1) {
@@ -40,16 +39,12 @@ export abstract class GenericRamRepository<
   }
 
   findByIdSync(id: GetId<TEntity>): Nullable<TEntity> {
-    return (
-      this.entities.find(
-        (entity) => entity.getId().asString() === id.asString(),
-      ) ?? null
-    );
+    return this.entities.find((entity) => entity.getId().equals(id)) ?? null;
   }
 
   saveSync(entity: TEntity): void {
-    const index = this.entities.findIndex(
-      (e) => entity.getId().asString() === e.getId().asString(),
+    const index = this.entities.findIndex((e) =>
+      entity.getId().equals(e.getId()),
     );
 
     if (index === -1) {
