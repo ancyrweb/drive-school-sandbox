@@ -1,26 +1,37 @@
 import { AuthContext } from '../../domain/model/auth-context.js';
-import { Role } from '../../domain/model/role.js';
 import { UserId } from '../../domain/entities/user-id.js';
+import { AdminId } from '../../domain/entities/admin-id.js';
+import { StudentId } from '../../domain/entities/student-id.js';
+import { InstructorId } from '../../domain/entities/instructor-id.js';
 
 export class AuthSeeds {
   static admin() {
     return new AuthContext({
-      id: new UserId('123'),
-      type: Role.ADMIN,
+      userId: new UserId('123'),
+      accountType: {
+        type: 'admin',
+        id: new AdminId(),
+      },
     });
   }
 
   static instructor() {
     return new AuthContext({
-      id: new UserId('123'),
-      type: Role.INSTRUCTOR,
+      userId: new UserId('123'),
+      accountType: {
+        type: 'instructor',
+        id: new InstructorId(),
+      },
     });
   }
 
   static student() {
     return new AuthContext({
-      id: new UserId('123'),
-      type: Role.STUDENT,
+      userId: new UserId('123'),
+      accountType: {
+        type: 'student',
+        id: new StudentId(),
+      },
     });
   }
 }

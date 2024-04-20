@@ -121,7 +121,10 @@ describe('Feature: creating an instructor', () => {
       userRepository.saveSync(
         User.create({
           id: new UserId(),
-          accountId: new InstructorId(),
+          account: {
+            type: 'instructor',
+            id: new InstructorId(),
+          },
           emailAddress: 'johndoe@gmail.com',
           password: 'azerty123',
           apikey: Apikey.generate('123456'),

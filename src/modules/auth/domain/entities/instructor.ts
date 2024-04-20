@@ -41,4 +41,9 @@ export class Instructor extends AggregateRoot<InstructorId, State, Snapshot> {
       lastName: this._state.lastName,
     };
   }
+
+  update(props: { firstName: string; lastName: string }) {
+    this._state.firstName = props.firstName;
+    this._state.lastName = props.lastName;
+  }
 }

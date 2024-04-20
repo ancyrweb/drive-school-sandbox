@@ -1,17 +1,16 @@
 import { z } from 'zod';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Inject } from '@nestjs/common';
 
 import { AbstractCommand } from '../../../shared/lib/command.js';
 import {
   I_INSTRUCTOR_REPOSITORY,
   IInstructorRepository,
 } from '../ports/instructor-repository.js';
-import { Inject } from '@nestjs/common';
 import {
   I_PASSWORD_STRATEGY,
   IPasswordStrategy,
 } from '../services/password-strategy/password-strategy.interface.js';
-import { Role } from '../../domain/model/role.js';
 import { BadRequestException } from '../../../shared/exceptions/bad-request-exception.js';
 import {
   I_API_KEY_GENERATOR,
@@ -25,6 +24,7 @@ import {
 import { UserId } from '../../domain/entities/user-id.js';
 import { User } from '../../domain/entities/user.js';
 import { Instructor } from '../../domain/entities/instructor.js';
+import { AccountType } from '../../domain/model/account.js';
 
 type Output = {
   instructorId: string;
@@ -46,8 +46,8 @@ export class CreateInstructor extends AbstractCommand<{
     });
   }
 
-  protected requires(): Role[] {
-    return [Role.ADMIN];
+  protected requires(): AccountType[] {
+    return ['admin'];
   }
 }
 
@@ -77,7 +77,10 @@ export class CreateInstructorCommandHandler
 
     const user = User.newAccount({
       id: new UserId(),
-      accountId: instructor.getId(),
+      account: {
+        type: 'instructor',
+        id: instructor.getId(),
+      },
       emailAddress: props.emailAddress,
       password: await this.passwordStrategy.hash(props.password),
       apikey: await this.apiKeyGenerator.generate(),

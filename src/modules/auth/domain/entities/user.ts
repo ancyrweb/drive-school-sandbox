@@ -9,7 +9,19 @@ import { UserCreatedEvent } from '../events/user-created-event.js';
 
 type State = {
   id: UserId;
-  accountId: InstructorId | StudentId | AdminId;
+  account:
+    | {
+        type: 'instructor';
+        id: InstructorId;
+      }
+    | {
+        type: 'student';
+        id: StudentId;
+      }
+    | {
+        type: 'admin';
+        id: AdminId;
+      };
   emailAddress: string;
   password: string;
   apikey: Apikey;
@@ -38,31 +50,15 @@ export class User extends AggregateRoot<UserId, State, Snapshot> {
     user.raise(
       new UserCreatedEvent({
         id: user._state.id.value,
-        account: user.takeAccountSnapshot(),
+        account: {
+          type: user._state.account.type,
+          id: user._state.account.id.value,
+        },
         emailAddress: user._state.emailAddress,
       }),
     );
 
     return user;
-  }
-
-  private takeAccountSnapshot(): Snapshot['account'] {
-    if (this._state.accountId instanceof InstructorId) {
-      return {
-        type: 'instructor',
-        id: this._state.accountId.value,
-      };
-    } else if (this._state.accountId instanceof StudentId) {
-      return {
-        type: 'student',
-        id: this._state.accountId.value,
-      };
-    } else {
-      return {
-        type: 'admin',
-        id: this._state.accountId.value,
-      };
-    }
   }
 
   takeSnapshot(): Snapshot {
@@ -71,12 +67,19 @@ export class User extends AggregateRoot<UserId, State, Snapshot> {
       emailAddress: this._state.emailAddress,
       password: this._state.password,
       apiKey: this._state.apikey.takeSnapshot(),
-      account: this.takeAccountSnapshot(),
+      account: {
+        type: this._state.account.type,
+        id: this._state.account.id.value,
+      },
     };
   }
 
   getApikey(): Apikey {
     return this._state.apikey;
+  }
+
+  getAccount() {
+    return this._state.account;
   }
 
   getEmailAddress(): string {

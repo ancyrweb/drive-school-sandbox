@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
+import { APP_GUARD } from '@nestjs/core';
+import { EntityManager } from '@mikro-orm/postgresql';
+
 import { SqlUser } from './infrastructure/persistence/sql/entities/sql-user.js';
 import { I_API_KEY_GENERATOR } from './application/services/apikey-generator/apikey-generator.interface.js';
 import { ApikeyGenerator } from './application/services/apikey-generator/apikey-generator.js';
 import { I_INSTRUCTOR_REPOSITORY } from './application/ports/instructor-repository.js';
-import { SqlUserRepository } from './infrastructure/persistence/sql/sql-user-repository.js';
+import { SqlUserRepository } from './infrastructure/persistence/sql/repositories/sql-user-repository.js';
 import { CreateInstructorCommandHandler } from './application/commands/create-instructor.js';
 import { I_PASSWORD_STRATEGY } from './application/services/password-strategy/password-strategy.interface.js';
 import { Argon2Strategy } from './application/services/password-strategy/argon2-strategy.js';
@@ -13,9 +16,10 @@ import { I_AUTHENTICATOR } from './application/services/authenticator/authentica
 import { Authenticator } from './application/services/authenticator/authenticator.js';
 import { AuthController } from './application/controllers/auth-controller.js';
 import { ApiKeyStrategy } from './application/services/apikey-strategy/api-key-strategy.service.js';
-import { APP_GUARD } from '@nestjs/core';
 import { AppAuthGuard } from './application/services/app-auth-guard/app-auth-guard.js';
-import { EntityManager } from '@mikro-orm/postgresql';
+import { SqlInstructorRepository } from './infrastructure/persistence/sql/repositories/sql-instructor-repository.js';
+import { SqlInstructor } from './infrastructure/persistence/sql/entities/sql-instructor.js';
+import { I_USER_REPOSITORY } from './application/ports/user-repository.js';
 
 @Module({
   imports: [CqrsModule, MikroOrmModule.forFeature([SqlUser])],
@@ -24,6 +28,12 @@ import { EntityManager } from '@mikro-orm/postgresql';
     // Adapters
     {
       provide: I_INSTRUCTOR_REPOSITORY,
+      inject: [getRepositoryToken(SqlInstructor), EntityManager],
+      useFactory: (repository, em) =>
+        new SqlInstructorRepository(repository, em),
+    },
+    {
+      provide: I_USER_REPOSITORY,
       inject: [getRepositoryToken(SqlUser), EntityManager],
       useFactory: (repository, em) => new SqlUserRepository(repository, em),
     },

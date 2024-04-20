@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { Nullable } from '../utils/types.js';
 import { AuthContext } from '../../auth/domain/model/auth-context.js';
-import { Role } from '../../auth/domain/model/role.js';
 import { ValidationException } from '../exceptions/validation-exception.js';
 import { NotAuthorizedException } from '../exceptions/not-authorized-exception.js';
+import { AccountType } from '../../auth/domain/model/account.js';
 
 /**
  * Represent a command that can be dispatched to our Application Services layer.
@@ -37,10 +37,7 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
   private checkAuth() {
     const requirements = this.requires();
     if (requirements.length > 0) {
-      const isAuthorized = requirements.some((role) =>
-        role.equals(this.auth.type),
-      );
-
+      const isAuthorized = requirements.includes(this.auth.getAccountType());
       if (!isAuthorized) {
         throw new NotAuthorizedException();
       }
@@ -60,7 +57,7 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
    * If the list is empty, the command is allowed to be executed by any authenticated user.
    * @protected
    */
-  protected requires(): Role[] {
+  protected requires(): AccountType[] {
     return [];
   }
 }

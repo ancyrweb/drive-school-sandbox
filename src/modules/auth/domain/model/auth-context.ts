@@ -1,12 +1,16 @@
-import { Role } from './role.js';
 import { UserId } from '../entities/user-id.js';
+import { Account } from './account.js';
 
 export class AuthContext {
-  public readonly id: UserId;
-  public readonly type: Role;
+  private readonly userId: UserId;
+  private readonly account: Account;
 
-  constructor(props: { id: UserId; type: Role }) {
-    this.id = props.id;
-    this.type = props.type;
+  constructor(props: { userId: UserId; accountType: Account }) {
+    this.userId = props.userId;
+    this.account = props.accountType;
+  }
+
+  getAccountType() {
+    return this.account.type;
   }
 }

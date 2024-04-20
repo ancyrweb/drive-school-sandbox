@@ -1,10 +1,10 @@
-import { SqlUser } from './entities/sql-user.js';
-import { GenericSqlRepository } from '../../../../shared/repository/generic-sql-repository.js';
-import { Optional } from '../../../../shared/utils/optional.js';
-import { IUserRepository } from '../../../application/ports/user-repository.js';
-import { User } from '../../../domain/entities/user.js';
-import { SqlUserMapper } from './mappers/sql-user-mapper.js';
-import { UserId } from '../../../domain/entities/user-id.js';
+import { SqlUser } from '../entities/sql-user.js';
+import { GenericSqlRepository } from '../../../../../shared/repository/generic-sql-repository.js';
+import { Optional } from '../../../../../shared/utils/optional.js';
+import { IUserRepository } from '../../../../application/ports/user-repository.js';
+import { User } from '../../../../domain/entities/user.js';
+import { SqlUserMapper } from '../mappers/sql-user-mapper.js';
+import { UserId } from '../../../../domain/entities/user-id.js';
 
 export class SqlUserRepository
   extends GenericSqlRepository<UserId, User, SqlUser>
