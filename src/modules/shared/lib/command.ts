@@ -62,3 +62,6 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
     return [];
   }
 }
+
+export type GetCommandPayload<T> =
+  T extends AbstractCommand<infer U> ? U : never;
