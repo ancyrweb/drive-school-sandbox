@@ -35,6 +35,74 @@
           "length": 6,
           "mappedType": "datetime"
         },
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "admins",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "admins_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
         "value": {
           "name": "value",
           "type": "varchar(255)",
@@ -45,7 +113,7 @@
           "mappedType": "string"
         }
       },
-      "name": "sql_apikey",
+      "name": "apikeys",
       "schema": "public",
       "indexes": [
         {
@@ -53,13 +121,13 @@
             "value"
           ],
           "composite": false,
-          "keyName": "sql_apikey_value_unique",
+          "keyName": "apikeys_value_unique",
           "constraint": true,
           "primary": false,
           "unique": true
         },
         {
-          "keyName": "sql_apikey_pkey",
+          "keyName": "apikeys_pkey",
           "columnNames": [
             "id"
           ],
@@ -123,11 +191,79 @@
           "mappedType": "string"
         }
       },
-      "name": "sql_instructor",
+      "name": "instructors",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "sql_instructor_pkey",
+          "keyName": "instructors_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "students",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "students_pkey",
           "columnNames": [
             "id"
           ],
@@ -209,7 +345,7 @@
           "mappedType": "json"
         }
       },
-      "name": "sql_user",
+      "name": "users",
       "schema": "public",
       "indexes": [
         {
@@ -217,7 +353,7 @@
             "email_address"
           ],
           "composite": false,
-          "keyName": "sql_user_email_address_unique",
+          "keyName": "users_email_address_unique",
           "constraint": true,
           "primary": false,
           "unique": true
@@ -227,13 +363,13 @@
             "apikey_id"
           ],
           "composite": false,
-          "keyName": "sql_user_apikey_id_unique",
+          "keyName": "users_apikey_id_unique",
           "constraint": true,
           "primary": false,
           "unique": true
         },
         {
-          "keyName": "sql_user_pkey",
+          "keyName": "users_pkey",
           "columnNames": [
             "id"
           ],
@@ -245,16 +381,16 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "sql_user_apikey_id_foreign": {
-          "constraintName": "sql_user_apikey_id_foreign",
+        "users_apikey_id_foreign": {
+          "constraintName": "users_apikey_id_foreign",
           "columnNames": [
             "apikey_id"
           ],
-          "localTableName": "public.sql_user",
+          "localTableName": "public.users",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.sql_apikey",
+          "referencedTableName": "public.apikeys",
           "updateRule": "cascade"
         }
       },

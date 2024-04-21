@@ -14,6 +14,7 @@ import { BadRequestExceptionFilter } from './application/exception/filters/bad-r
 import { HttpExceptionFilter } from './application/exception/filters/http-exception-filter.js';
 import { SqlApikey } from '../auth/infrastructure/persistence/sql/entities/sql-apikey.js';
 import { SqlInstructor } from '../auth/infrastructure/persistence/sql/entities/sql-instructor.js';
+import { NotAuthorizedExceptionFilter } from './application/exception/filters/not-authorized-exception-filter.js';
 
 @Module({
   imports: [
@@ -62,6 +63,10 @@ import { SqlInstructor } from '../auth/infrastructure/persistence/sql/entities/s
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: NotAuthorizedExceptionFilter,
     },
   ],
 })

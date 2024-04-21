@@ -11,7 +11,7 @@ type Props = {
   account: AccountSnapshot;
 };
 
-@Entity()
+@Entity({ tableName: 'users' })
 export class SqlUser extends SqlEntity<Props> {
   @Property({ unique: true })
   emailAddress: string;

@@ -12,6 +12,6 @@ export abstract class BaseFixture<T> implements IFixture {
 
   async load(app: TestApp): Promise<void> {
     const repository = this.getRepository(app);
-    await repository.create(this.entity);
+    await repository.save(this.entity);
   }
 }

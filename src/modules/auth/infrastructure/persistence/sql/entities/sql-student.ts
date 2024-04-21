@@ -7,8 +7,8 @@ type Props = {
   lastName: string;
 };
 
-@Entity({ tableName: 'instructors' })
-export class SqlInstructor extends SqlEntity<Props> {
+@Entity({ tableName: 'students' })
+export class SqlStudent extends SqlEntity<Props> {
   @Property()
   firstName: string;
 
