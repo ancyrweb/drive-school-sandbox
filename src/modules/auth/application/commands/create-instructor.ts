@@ -32,6 +32,7 @@ type Output = {
 };
 
 export class CreateInstructor extends AbstractCommand<{
+  id: string;
   emailAddress: string;
   password: string;
   firstName: string;
@@ -39,6 +40,7 @@ export class CreateInstructor extends AbstractCommand<{
 }> {
   getSchema() {
     return z.object({
+      id: z.string(),
       emailAddress: z.string().email(),
       password: z.string().min(8).max(128),
       firstName: z.string(),
@@ -53,7 +55,7 @@ export class CreateInstructor extends AbstractCommand<{
 
 @CommandHandler(CreateInstructor)
 export class CreateInstructorCommandHandler
-  implements ICommandHandler<CreateInstructor, Output>
+  implements ICommandHandler<CreateInstructor>
 {
   constructor(
     @Inject(I_USER_REPOSITORY)
@@ -70,13 +72,13 @@ export class CreateInstructorCommandHandler
     await this.assertEmailAddressIsAvailable(props.emailAddress);
 
     const instructor = Instructor.newAccount({
-      id: new InstructorId(),
+      id: new InstructorId(props.id),
       firstName: props.firstName,
       lastName: props.lastName,
     });
 
     const user = User.newAccount({
-      id: new UserId(),
+      id: new UserId(props.id),
       account: {
         type: 'instructor',
         id: instructor.getId(),
@@ -88,11 +90,6 @@ export class CreateInstructorCommandHandler
 
     await this.userRepository.save(user);
     await this.instructorRepository.save(instructor);
-
-    return {
-      instructorId: instructor.getId().asString(),
-      userId: user.getId().asString(),
-    };
   }
 
   private async assertEmailAddressIsAvailable(emailAddress: string) {

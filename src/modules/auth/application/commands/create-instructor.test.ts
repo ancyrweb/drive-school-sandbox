@@ -44,6 +44,7 @@ describe('Feature: creating an instructor', () => {
 
   describe('Scenario: happy path', () => {
     const command = new CreateInstructor(AuthSeeds.admin(), {
+      id: 'my-id',
       emailAddress: 'johndoe@gmail.com',
       password: 'azerty123',
       firstName: 'John',
@@ -53,11 +54,11 @@ describe('Feature: creating an instructor', () => {
     it('should create a new user', async () => {
       const result = await commandHandler.execute(command);
       const instructor = instructorRepository
-        .findByIdSync(new InstructorId(result.instructorId))!
+        .findByIdSync(new InstructorId('my-id'))!
         .takeSnapshot();
 
       const user = userRepository
-        .findByIdSync(new UserId(result.userId))!
+        .findByIdSync(new UserId('my-id'))!
         .takeSnapshot();
 
       expect(user.emailAddress).toEqual('johndoe@gmail.com');
@@ -68,17 +69,17 @@ describe('Feature: creating an instructor', () => {
     it('should generate events', async () => {
       const result = await commandHandler.execute(command);
       const instructor = instructorRepository.findByIdSync(
-        new InstructorId(result.instructorId),
+        new InstructorId('my-id'),
       )!;
-      const user = userRepository.findByIdSync(new UserId(result.userId))!;
+      const user = userRepository.findByIdSync(new UserId('my-id'))!;
 
       expectEventToBeRaised(
         user.getEvents(),
         new UserCreatedEvent({
-          id: result.userId,
+          id: 'my-id',
           account: {
             type: 'instructor',
-            id: result.instructorId,
+            id: 'my-id',
           },
           emailAddress: 'johndoe@gmail.com',
         }),
@@ -87,7 +88,7 @@ describe('Feature: creating an instructor', () => {
       expectEventToBeRaised(
         instructor.getEvents(),
         new InstructorCreatedEvent({
-          id: result.instructorId,
+          id: 'my-id',
           firstName: 'John',
           lastName: 'Doe',
         }),
@@ -97,7 +98,7 @@ describe('Feature: creating an instructor', () => {
     it('should generate an apikey', async () => {
       const result = await commandHandler.execute(command);
       const user = userRepository
-        .findByIdSync(new UserId(result.userId))!
+        .findByIdSync(new UserId('my-id'))!
         .takeSnapshot();
 
       expect(user.apiKey.value).toBe(StubApiKeyGenerator.VALUE);
@@ -105,7 +106,7 @@ describe('Feature: creating an instructor', () => {
 
     it('should hash the password', async () => {
       const result = await commandHandler.execute(command);
-      const user = userRepository.findByIdSync(new UserId(result.userId))!;
+      const user = userRepository.findByIdSync(new UserId('my-id'))!;
 
       const isValid = await passwordStrategy.equals(
         'azerty123',
@@ -120,10 +121,10 @@ describe('Feature: creating an instructor', () => {
     beforeEach(() => {
       userRepository.saveSync(
         User.create({
-          id: new UserId(),
+          id: new UserId('existing-user'),
           account: {
             type: 'instructor',
-            id: new InstructorId(),
+            id: new InstructorId('existing-user'),
           },
           emailAddress: 'johndoe@gmail.com',
           password: 'azerty123',
@@ -134,6 +135,7 @@ describe('Feature: creating an instructor', () => {
 
     it('should fail', async () => {
       const command = new CreateInstructor(AuthSeeds.admin(), {
+        id: 'my-id',
         emailAddress: 'johndoe@gmail.com',
         password: 'azerty123',
         firstName: 'John',
