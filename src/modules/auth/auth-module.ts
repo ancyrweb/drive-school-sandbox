@@ -20,9 +20,14 @@ import { AppAuthGuard } from './application/services/app-auth-guard/app-auth-gua
 import { SqlInstructorRepository } from './infrastructure/persistence/sql/repositories/sql-instructor-repository.js';
 import { SqlInstructor } from './infrastructure/persistence/sql/entities/sql-instructor.js';
 import { I_USER_REPOSITORY } from './application/ports/user-repository.js';
+import { UpdateInstructorCommandHandler } from './application/commands/update-instructor.js';
+import { SqlApikey } from './infrastructure/persistence/sql/entities/sql-apikey.js';
 
 @Module({
-  imports: [CqrsModule, MikroOrmModule.forFeature([SqlUser])],
+  imports: [
+    CqrsModule,
+    MikroOrmModule.forFeature([SqlUser, SqlApikey, SqlInstructor]),
+  ],
   controllers: [AuthController],
   providers: [
     // Adapters
@@ -57,6 +62,7 @@ import { I_USER_REPOSITORY } from './application/ports/user-repository.js';
     ApiKeyStrategy,
     // Commands & Queries
     CreateInstructorCommandHandler,
+    UpdateInstructorCommandHandler,
   ],
   exports: [],
 })

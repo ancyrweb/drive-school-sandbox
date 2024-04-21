@@ -22,11 +22,13 @@ import { SqlInstructor } from '../auth/infrastructure/persistence/sql/entities/s
       inject: [],
       useFactory: () => {
         const isTestEnvironment = process.env.NODE_ENV === 'test';
+        const clientUrl = isTestEnvironment
+          ? 'postgresql://driveschooltest:password123@localhost:7654/driveschooltest'
+          : 'postgresql://driveschool:password123@localhost:5432/driveschool';
 
         return {
           metadataProvider: TsMorphMetadataProvider,
-          clientUrl:
-            'postgresql://driveschool:password123@localhost:5432/driveschool',
+          clientUrl,
           driver: PostgreSqlDriver,
           entities: [SqlUser, SqlApikey, SqlInstructor],
           discovery: {
