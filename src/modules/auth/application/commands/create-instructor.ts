@@ -24,7 +24,7 @@ import {
 import { UserId } from '../../domain/entities/user-id.js';
 import { User } from '../../domain/entities/user.js';
 import { Instructor } from '../../domain/entities/instructor.js';
-import { InstructorAccount } from '../../domain/model/account.js';
+import { Account } from '../../domain/model/account.js';
 
 export class CreateInstructor extends AbstractCommand<{
   id: string;
@@ -43,8 +43,8 @@ export class CreateInstructor extends AbstractCommand<{
     });
   }
 
-  protected requires() {
-    return ['admin'];
+  protected isAuthorized(auth) {
+    return auth.isAdmin();
   }
 }
 
@@ -74,7 +74,7 @@ export class CreateInstructorCommandHandler
 
     const user = User.newAccount({
       id: new UserId(props.id),
-      account: new InstructorAccount(instructor.getId()),
+      account: Account.instructor(instructor.getId()),
       emailAddress: props.emailAddress,
       password: await this.passwordStrategy.hash(props.password),
       apikey: await this.apiKeyGenerator.generate(),

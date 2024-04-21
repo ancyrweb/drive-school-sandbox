@@ -20,11 +20,15 @@ export class AuthContext {
     return this.userId.equals(id) || this.account.getId().equals(id);
   }
 
-  getAccountType() {
-    return this.account.getType();
+  isAdmin() {
+    return this.account.isAdmin();
   }
 
-  isAdmin() {
-    return this.account.getType() === 'admin';
+  isInstructor() {
+    return this.account.isInstructor();
+  }
+
+  isStudent() {
+    return this.account.isStudent();
   }
 }

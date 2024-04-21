@@ -30,8 +30,8 @@ export class UpdateInstructor extends AbstractCommand<{
     });
   }
 
-  protected requires() {
-    return ['admin', 'instructor'];
+  protected isAuthorized(auth) {
+    return auth.isAdmin() || auth.isInstructor();
   }
 }
 

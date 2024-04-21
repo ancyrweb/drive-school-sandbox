@@ -8,37 +8,56 @@ export type AccountSnapshot = {
   id: string;
 };
 
-export abstract class Account<TId extends BrandedId<any> = BrandedId<any>> {
-  constructor(private readonly id: TId) {}
+type AccountType = 'admin' | 'instructor' | 'student';
 
-  abstract getType(): string;
+export class Account {
+  constructor(
+    private readonly id: BrandedId<any>,
+    private readonly type: AccountType,
+  ) {}
+
+  static instructor(id: InstructorId) {
+    return new Account(id, 'instructor');
+  }
+
+  static student(id: StudentId) {
+    return new Account(id, 'student');
+  }
+
+  static admin(id: AdminId) {
+    return new Account(id, 'admin');
+  }
+
+  static fromSnapshot(snapshot: AccountSnapshot) {
+    if (snapshot.type === 'instructor') {
+      return Account.instructor(new InstructorId(snapshot.id));
+    } else if (snapshot.type === 'student') {
+      return Account.student(new StudentId(snapshot.id));
+    } else {
+      return Account.admin(new AdminId(snapshot.id));
+    }
+  }
 
   getId() {
     return this.id;
   }
 
+  isInstructor() {
+    return this.type === 'instructor';
+  }
+
+  isStudent() {
+    return this.type === 'student';
+  }
+
+  isAdmin() {
+    return this.type === 'admin';
+  }
+
   takeSnapshot(): AccountSnapshot {
     return {
-      type: this.getType(),
+      type: this.type,
       id: this.id.asString(),
     };
-  }
-}
-
-export class InstructorAccount extends Account<InstructorId> {
-  getType() {
-    return 'instructor';
-  }
-}
-
-export class StudentAccount extends Account<StudentId> {
-  getType() {
-    return 'student';
-  }
-}
-
-export class AdminAccount extends Account<AdminId> {
-  getType() {
-    return 'admin';
   }
 }

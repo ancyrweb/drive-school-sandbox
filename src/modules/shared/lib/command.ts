@@ -34,13 +34,8 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
   }
 
   private checkAuth() {
-    const requirements = this.requires();
-    if (requirements.length > 0) {
-      const isAuthorized = requirements.includes(this.auth.getAccountType());
-
-      if (!isAuthorized) {
-        throw new NotAuthorizedException();
-      }
+    if (!this.isAuthorized(this.auth)) {
+      throw new NotAuthorizedException();
     }
   }
 
@@ -53,13 +48,13 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
   }
 
   /**
-   * Returns a list of roles that are allowed to execute this command.
-   * If the list is empty, the command is allowed to be executed by any authenticated user.
-   * For more granular control, implement your own logic inside the command handler
+   * If this method returns false, a not-authorized exception will be raised.
+   * This method follows an "everything is authorized by default" approach.
+   * @param auth
    * @protected
    */
-  protected requires(): string[] {
-    return [];
+  protected isAuthorized(auth: AuthContext): boolean {
+    return true;
   }
 }
 
