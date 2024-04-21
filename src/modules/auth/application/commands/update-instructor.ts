@@ -9,7 +9,6 @@ import {
 } from '../ports/instructor-repository.js';
 import { InstructorId } from '../../domain/entities/instructor-id.js';
 import { NotFoundException } from '../../../shared/exceptions/not-found-exception.js';
-import { AccountType } from '../../domain/model/account.js';
 import { AuthContext } from '../../domain/model/auth-context.js';
 import { Instructor } from '../../domain/entities/instructor.js';
 import { NotAuthorizedException } from '../../../shared/exceptions/not-authorized-exception.js';
@@ -31,7 +30,7 @@ export class UpdateInstructor extends AbstractCommand<{
     });
   }
 
-  protected requires(): AccountType[] {
+  protected requires() {
     return ['admin', 'instructor'];
   }
 }
@@ -66,7 +65,7 @@ export class UpdateInstructorCommandHandler
       return;
     }
 
-    if (auth.getAccountId().equals(instructor.getId())) {
+    if (auth.is(instructor.getId())) {
       return;
     }
 

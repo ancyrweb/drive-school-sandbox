@@ -2,26 +2,12 @@ import { UserId } from './user-id.js';
 import { Apikey } from './apikey.js';
 import { AggregateRoot } from '../../../shared/lib/aggregate-root.js';
 import { GetSnapshot } from '../../../shared/lib/entity.js';
-import { InstructorId } from './instructor-id.js';
-import { StudentId } from './student-id.js';
-import { AdminId } from './admin-id.js';
 import { UserCreatedEvent } from '../events/user-created-event.js';
+import { Account } from '../model/account.js';
 
 type State = {
   id: UserId;
-  account:
-    | {
-        type: 'instructor';
-        id: InstructorId;
-      }
-    | {
-        type: 'student';
-        id: StudentId;
-      }
-    | {
-        type: 'admin';
-        id: AdminId;
-      };
+  account: Account;
   emailAddress: string;
   password: string;
   apikey: Apikey;
@@ -50,10 +36,7 @@ export class User extends AggregateRoot<UserId, State, Snapshot> {
     user.raise(
       new UserCreatedEvent({
         id: user._state.id.value,
-        account: {
-          type: user._state.account.type,
-          id: user._state.account.id.value,
-        },
+        account: user._state.account.takeSnapshot(),
         emailAddress: user._state.emailAddress,
       }),
     );
@@ -67,10 +50,7 @@ export class User extends AggregateRoot<UserId, State, Snapshot> {
       emailAddress: this._state.emailAddress,
       password: this._state.password,
       apiKey: this._state.apikey.takeSnapshot(),
-      account: {
-        type: this._state.account.type,
-        id: this._state.account.id.value,
-      },
+      account: this._state.account.takeSnapshot(),
     };
   }
 

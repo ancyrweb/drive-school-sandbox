@@ -15,6 +15,7 @@ import { User } from '../../domain/entities/user.js';
 import { UserCreatedEvent } from '../../domain/events/user-created-event.js';
 import { expectEventToBeRaised } from '../../../shared/utils/test-utils.js';
 import { InstructorCreatedEvent } from '../../domain/events/instructor-created-event.js';
+import { InstructorAccount } from '../../domain/model/account.js';
 
 class StubApiKeyGenerator implements IApiKeyGenerator {
   static VALUE = '123456';
@@ -122,10 +123,7 @@ describe('Feature: creating an instructor', () => {
       userRepository.saveSync(
         User.create({
           id: new UserId('existing-user'),
-          account: {
-            type: 'instructor',
-            id: new InstructorId('existing-user'),
-          },
+          account: new InstructorAccount(new InstructorId('existing-user')),
           emailAddress: 'johndoe@gmail.com',
           password: 'azerty123',
           apikey: Apikey.generate('123456'),

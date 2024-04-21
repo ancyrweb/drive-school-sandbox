@@ -22,7 +22,7 @@ export class Authenticator implements IAuthenticator {
 
     return new AuthContext({
       userId: user.getId(),
-      accountType: user.getAccount(),
+      account: user.getAccount(),
     });
   }
 }

@@ -3,7 +3,6 @@ import { Nullable } from '../utils/types.js';
 import { AuthContext } from '../../auth/domain/model/auth-context.js';
 import { ValidationException } from '../exceptions/validation-exception.js';
 import { NotAuthorizedException } from '../exceptions/not-authorized-exception.js';
-import { AccountType } from '../../auth/domain/model/account.js';
 
 /**
  * Represent a command that can be dispatched to our Application Services layer.
@@ -38,6 +37,7 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
     const requirements = this.requires();
     if (requirements.length > 0) {
       const isAuthorized = requirements.includes(this.auth.getAccountType());
+
       if (!isAuthorized) {
         throw new NotAuthorizedException();
       }
@@ -58,7 +58,7 @@ export abstract class AbstractCommand<TProps extends Record<string, any>> {
    * For more granular control, implement your own logic inside the command handler
    * @protected
    */
-  protected requires(): AccountType[] {
+  protected requires(): string[] {
     return [];
   }
 }
