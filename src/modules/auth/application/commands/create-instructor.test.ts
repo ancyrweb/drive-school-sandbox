@@ -102,7 +102,7 @@ describe('Feature: creating an instructor', () => {
         .findByIdSync(new UserId('my-id'))!
         .takeSnapshot();
 
-      expect(user.apiKey.value).toBe(StubApiKeyGenerator.VALUE);
+      expect(user.apikey.value).toBe(StubApiKeyGenerator.VALUE);
     });
 
     it('should hash the password', async () => {

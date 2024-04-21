@@ -35,20 +35,25 @@ export class SqlUserMapper extends Mapper<User, SqlUser> {
         id: new ApikeyId(obj.apikey.id),
         value: obj.apikey.value,
       }),
-    });
+    }).attachRecord(obj);
   }
 
   toPersistence(obj: User): SqlUser {
     const snapshot = obj.takeSnapshot();
-    return new SqlUser({
-      id: snapshot.id,
-      emailAddress: snapshot.emailAddress,
-      password: snapshot.password,
-      account: snapshot.account,
-      apikey: new SqlApikey({
-        id: snapshot.apiKey.id,
-        value: snapshot.apiKey.value,
-      }),
-    });
+    const record = obj.getRecord<SqlUser>() ?? new SqlUser();
+
+    record.id = snapshot.id;
+    record.emailAddress = snapshot.emailAddress;
+    record.password = snapshot.password;
+    record.account = snapshot.account;
+
+    if (!record.apikey) {
+      record.apikey = new SqlApikey();
+    }
+
+    record.apikey.id = snapshot.apikey.id;
+    record.apikey.value = snapshot.apikey.value;
+
+    return record;
   }
 }

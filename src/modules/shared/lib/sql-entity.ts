@@ -16,8 +16,8 @@ export abstract class SqlEntity<TProps> {
 
   private events: DomainEvent[] = [];
 
-  constructor(props: TProps) {
-    Object.assign(this, props);
+  constructor(props?: TProps) {
+    Object.assign(this, props ?? {});
   }
 
   setEvents(events: DomainEvent[]) {

@@ -9,15 +9,17 @@ export class SqlInstructorMapper extends Mapper<Instructor, SqlInstructor> {
       id: new InstructorId(obj.id),
       firstName: obj.firstName,
       lastName: obj.lastName,
-    });
+    }).attachRecord(obj);
   }
 
   toPersistence(obj: Instructor): SqlInstructor {
     const snapshot = obj.takeSnapshot();
-    return new SqlInstructor({
-      id: snapshot.id,
-      firstName: snapshot.firstName,
-      lastName: snapshot.lastName,
-    });
+    const record = obj.getRecord<SqlInstructor>() ?? new SqlInstructor();
+
+    record.id = snapshot.id;
+    record.firstName = snapshot.firstName;
+    record.lastName = snapshot.lastName;
+
+    return record;
   }
 }

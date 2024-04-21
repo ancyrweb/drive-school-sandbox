@@ -19,7 +19,7 @@ type Snapshot = {
   id: string;
   emailAddress: string;
   password: string;
-  apiKey: GetSnapshot<Apikey>;
+  apikey: GetSnapshot<Apikey>;
   account: AccountSnapshot;
 };
 
@@ -46,7 +46,7 @@ export class User extends AggregateRoot<UserId, State, Snapshot> {
       id: this._state.id.value,
       emailAddress: this._state.emailAddress,
       password: this._state.password,
-      apiKey: this._state.apikey.takeSnapshot(),
+      apikey: this._state.apikey.takeSnapshot(),
       account: this._state.account.takeSnapshot(),
     };
   }
