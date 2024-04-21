@@ -1,16 +1,14 @@
 import { Entity, OneToOne, Property } from '@mikro-orm/core';
 import { SqlApikey } from './sql-apikey.js';
 import { SqlEntity } from '../../../../../shared/lib/sql-entity.js';
+import { AccountSnapshot } from '../../../../domain/model/account.js';
 
 type Props = {
   id: string;
   emailAddress: string;
   password: string;
   apikey: SqlApikey;
-  account: {
-    type: 'instructor' | 'student' | 'admin';
-    id: string;
-  };
+  account: AccountSnapshot;
 };
 
 @Entity()
@@ -25,5 +23,5 @@ export class SqlUser extends SqlEntity<Props> {
   apikey: SqlApikey;
 
   @Property({ type: 'jsonb' })
-  account: Props['account'];
+  account: AccountSnapshot;
 }

@@ -3,7 +3,7 @@ import { Apikey } from './apikey.js';
 import { AggregateRoot } from '../../../shared/lib/aggregate-root.js';
 import { GetSnapshot } from '../../../shared/lib/entity.js';
 import { UserCreatedEvent } from '../events/user-created-event.js';
-import { Account } from '../model/account.js';
+import { Account, AccountSnapshot } from '../model/account.js';
 
 type State = {
   id: UserId;
@@ -20,10 +20,7 @@ type Snapshot = {
   emailAddress: string;
   password: string;
   apiKey: GetSnapshot<Apikey>;
-  account: {
-    type: 'instructor' | 'student' | 'admin';
-    id: string;
-  };
+  account: AccountSnapshot;
 };
 
 export class User extends AggregateRoot<UserId, State, Snapshot> {

@@ -56,16 +56,11 @@ export class UpdateInstructorCommandHandler
     this.verifyAuthorization(auth, instructor);
 
     instructor.update(props.payload);
-
     await this.instructorRepository.save(instructor);
   }
 
   verifyAuthorization(auth: AuthContext, instructor: Instructor) {
-    if (auth.isAdmin()) {
-      return;
-    }
-
-    if (auth.is(instructor.getId())) {
+    if (auth.isAdmin() || auth.is(instructor.getId())) {
       return;
     }
 

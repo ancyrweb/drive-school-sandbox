@@ -8,15 +8,20 @@ import { InstructorId } from '../../../../domain/entities/instructor-id.js';
 import { StudentId } from '../../../../domain/entities/student-id.js';
 import { AdminId } from '../../../../domain/entities/admin-id.js';
 import { SqlApikey } from '../entities/sql-apikey.js';
+import {
+  AdminAccount,
+  InstructorAccount,
+  StudentAccount,
+} from '../../../../domain/model/account.js';
 
 export class SqlUserMapper extends Mapper<User, SqlUser> {
   private toAccountId(user: SqlUser) {
     if (user.account.type === 'instructor') {
-      return new InstructorId(user.account.id);
+      return new InstructorAccount(new InstructorId(user.account.id));
     } else if (user.account.type === 'student') {
-      return new StudentId(user.account.id);
+      return new StudentAccount(new StudentId(user.account.id));
     } else {
-      return new AdminId(user.account.id);
+      return new AdminAccount(new AdminId(user.account.id));
     }
   }
 
@@ -25,11 +30,11 @@ export class SqlUserMapper extends Mapper<User, SqlUser> {
       id: new UserId(obj.id),
       emailAddress: obj.emailAddress,
       password: obj.password,
+      account: this.toAccountId(obj),
       apikey: Apikey.create({
         id: new ApikeyId(obj.apikey.id),
         value: obj.apikey.value,
       }),
-      accountId: this.toAccountId(obj),
     });
   }
 
@@ -39,14 +44,11 @@ export class SqlUserMapper extends Mapper<User, SqlUser> {
       id: snapshot.id,
       emailAddress: snapshot.emailAddress,
       password: snapshot.password,
+      account: snapshot.account,
       apikey: new SqlApikey({
         id: snapshot.apiKey.id,
         value: snapshot.apiKey.value,
       }),
-      account: {
-        type: snapshot.account.type,
-        id: snapshot.account.id,
-      },
     });
   }
 }

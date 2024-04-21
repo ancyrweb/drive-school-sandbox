@@ -19,7 +19,7 @@ export class IdProvider {
  * @constructor
  */
 export class BrandedId<T extends string> {
-  __brand: T;
+  protected __brand: T;
 
   constructor(public readonly value: string = IdProvider.generate()) {}
 
@@ -28,7 +28,7 @@ export class BrandedId<T extends string> {
   }
 
   public equals(other: BrandedId<any>) {
-    return this.__brand === other.__brand && this.value === other.value;
+    return this.value === other.value;
   }
 }
 

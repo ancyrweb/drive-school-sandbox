@@ -13,8 +13,7 @@ export class AuthContext {
 
   /**
    * Return true if the authenticated user correspond to the ID
-   * Since a user has an underlying account, it will match against
-   * both the user and the account
+   * We can either pass a UserId or any Account ids (InstructorId, StudentId, AdminId)
    * @param id
    */
   is(id: BrandedId<any>) {
