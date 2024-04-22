@@ -13,7 +13,7 @@ import { AuthContext } from '../../domain/model/auth-context.js';
 import { Instructor } from '../../domain/entities/instructor.js';
 import { NotAuthorizedException } from '../../../shared/exceptions/not-authorized-exception.js';
 
-export class UpdateInstructor extends AbstractCommand<{
+export class UpdateInstructorCommand extends AbstractCommand<{
   instructorId: string;
   payload: {
     firstName: string;
@@ -35,16 +35,16 @@ export class UpdateInstructor extends AbstractCommand<{
   }
 }
 
-@CommandHandler(UpdateInstructor)
+@CommandHandler(UpdateInstructorCommand)
 export class UpdateInstructorCommandHandler
-  implements ICommandHandler<UpdateInstructor>
+  implements ICommandHandler<UpdateInstructorCommand>
 {
   constructor(
     @Inject(I_INSTRUCTOR_REPOSITORY)
     private readonly instructorRepository: IInstructorRepository,
   ) {}
 
-  async execute({ auth, props }: UpdateInstructor) {
+  async execute({ auth, props }: UpdateInstructorCommand) {
     const instructor = await this.instructorRepository
       .findById(new InstructorId(props.instructorId))
       .then((q) =>

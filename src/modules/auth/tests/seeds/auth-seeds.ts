@@ -6,24 +6,24 @@ import { InstructorId } from '../../domain/entities/instructor-id.js';
 import { Account } from '../../domain/model/account.js';
 
 export class AuthSeeds {
-  static admin() {
+  static admin(id: string = '123') {
     return new AuthContext({
-      userId: new UserId('123'),
-      account: Account.admin(new AdminId()),
+      userId: new UserId(id),
+      account: Account.admin(new AdminId(id)),
     });
   }
 
-  static instructor() {
+  static instructor(id: string = '123') {
     return new AuthContext({
-      userId: new UserId('123'),
-      account: Account.instructor(new InstructorId()),
+      userId: new UserId(id),
+      account: Account.instructor(new InstructorId(id)),
     });
   }
 
-  static student() {
+  static student(id: string = '123') {
     return new AuthContext({
-      userId: new UserId('123'),
-      account: Account.student(new StudentId()),
+      userId: new UserId(id),
+      account: Account.student(new StudentId(id)),
     });
   }
 }

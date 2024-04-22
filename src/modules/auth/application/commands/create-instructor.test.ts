@@ -11,11 +11,11 @@ import { InstructorId } from '../../domain/entities/instructor-id.js';
 import { RamUserRepository } from '../../infrastructure/persistence/ram/ram-user-repository.js';
 import { UserId } from '../../domain/entities/user-id.js';
 import { Apikey } from '../../domain/entities/apikey.js';
-import { User } from '../../domain/entities/user.js';
 import { UserCreatedEvent } from '../../domain/events/user-created-event.js';
 import { expectEventToBeRaised } from '../../../shared/utils/test-utils.js';
 import { InstructorCreatedEvent } from '../../domain/events/instructor-created-event.js';
 import { Account } from '../../domain/model/account.js';
+import { UserBuilder } from '../../tests/factories/user-builder.js';
 
 class StubApiKeyGenerator implements IApiKeyGenerator {
   static VALUE = '123456';
@@ -121,13 +121,13 @@ describe('Feature: creating an instructor', () => {
   describe('Scenario: the e-mail address is already taken', () => {
     beforeEach(() => {
       userRepository.saveSync(
-        User.create({
+        new UserBuilder({
           id: new UserId('existing-user'),
           account: Account.instructor(new InstructorId('existing-user')),
           emailAddress: 'johndoe@gmail.com',
           password: 'azerty123',
           apikey: Apikey.generate('123456'),
-        }),
+        }).build(),
       );
     });
 

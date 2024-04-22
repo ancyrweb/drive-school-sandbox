@@ -1,6 +1,7 @@
 import { AggregateRoot } from '../../../shared/lib/aggregate-root.js';
 import { InstructorId } from './instructor-id.js';
 import { InstructorCreatedEvent } from '../events/instructor-created-event.js';
+import { InstructorUpdatedEvent } from '../events/instructor-updated-event.js';
 
 type State = {
   id: InstructorId;
@@ -45,5 +46,13 @@ export class Instructor extends AggregateRoot<InstructorId, State, Snapshot> {
   update(props: { firstName: string; lastName: string }) {
     this._state.firstName = props.firstName;
     this._state.lastName = props.lastName;
+
+    this.raise(
+      new InstructorUpdatedEvent({
+        id: this._state.id.value,
+        newFirstName: this._state.firstName,
+        newLastName: this._state.lastName,
+      }),
+    );
   }
 }
