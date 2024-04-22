@@ -1,6 +1,7 @@
 import { UserId } from '../entities/user-id.js';
 import { Account } from './account.js';
 import { BrandedId } from '../../../shared/lib/id.js';
+import { StudentId } from '../entities/student-id.js';
 
 export class AuthContext {
   private readonly userId: UserId;
@@ -30,5 +31,14 @@ export class AuthContext {
 
   isStudent() {
     return this.account.isStudent();
+  }
+
+  getStudentId() {
+    const id = this.account.getId();
+    if (id instanceof StudentId) {
+      return id;
+    }
+
+    throw new Error('The authenticated user is not a student');
   }
 }

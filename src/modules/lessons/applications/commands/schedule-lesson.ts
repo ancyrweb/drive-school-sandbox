@@ -1,24 +1,38 @@
-import { AbstractCommand } from '../../../shared/lib/command.js';
 import { z } from 'zod';
 import { CommandHandler } from '@nestjs/cqrs';
+import { startOfDay } from 'date-fns';
+
+import { AbstractCommand } from '../../../shared/lib/command.js';
 import { InstructorId } from '../../../auth/domain/entities/instructor-id.js';
 import { NotFoundException } from '../../../shared/exceptions/not-found-exception.js';
 import { StudentId } from '../../../auth/domain/entities/student-id.js';
-import { startOfDay } from 'date-fns';
-import { DateRange } from '../../../shared/domain/date-range.js';
+import { DateRange } from '../../domain/model/date-range.js';
 import { BadRequestException } from '../../../shared/exceptions/bad-request-exception.js';
 import { CreditPoints } from '../../../auth/domain/model/credit-points.js';
 import { Lesson } from '../../domain/entities/lesson.js';
 import { LessonId } from '../../domain/entities/lesson-id.js';
-import { IInstructorRepository } from '../../../auth/application/ports/instructor-repository.js';
-import { IStudentRepository } from '../../../auth/application/ports/student-repository.js';
-import { IScheduleService } from '../services/schedule-service/schedule-service.interface.js';
-import { ILessonRepository } from '../ports/lesson-repository.js';
+import {
+  I_INSTRUCTOR_REPOSITORY,
+  IInstructorRepository,
+} from '../../../auth/application/ports/instructor-repository.js';
+import {
+  I_STUDENT_REPOSITORY,
+  IStudentRepository,
+} from '../../../auth/application/ports/student-repository.js';
+import {
+  I_SCHEDULE_PROVIDER,
+  IScheduleProvider,
+} from '../ports/schedule-provider.js';
+import {
+  I_LESSON_REPOSITORY,
+  ILessonRepository,
+} from '../ports/lesson-repository.js';
+import { AuthContext } from '../../../auth/domain/model/auth-context.js';
+import { Inject } from '@nestjs/common';
 
-export class ScheduleLessonCommand extends AbstractCommand<{
+export class ReserveLessonCommand extends AbstractCommand<{
   lessonId: string;
   instructorId: string;
-  studentId: string;
   scheduledAt: {
     start: Date;
     end: Date;
@@ -28,32 +42,43 @@ export class ScheduleLessonCommand extends AbstractCommand<{
     return z.object({
       lessonId: z.string(),
       instructorId: z.string(),
-      studentId: z.string(),
       scheduledAt: z.object({
         start: z.coerce.date(),
         end: z.coerce.date(),
       }),
     });
   }
+
+  /**
+   * Only a student can reserve a lesson because it implies
+   * consuming credit points
+   * @param auth
+   * @protected
+   */
+  protected isAuthorized(auth: AuthContext): boolean {
+    return auth.isStudent();
+  }
 }
 
-@CommandHandler(ScheduleLessonCommand)
-export class ScheduleLessonCommandHandler {
+@CommandHandler(ReserveLessonCommand)
+export class ReserveLessonCommandHandler {
   constructor(
+    @Inject(I_INSTRUCTOR_REPOSITORY)
     private readonly instructorRepository: IInstructorRepository,
+    @Inject(I_STUDENT_REPOSITORY)
     private readonly studentRepository: IStudentRepository,
-    private readonly scheduleService: IScheduleService,
+    @Inject(I_SCHEDULE_PROVIDER)
+    private readonly scheduleService: IScheduleProvider,
+    @Inject(I_LESSON_REPOSITORY)
     private readonly lessonRepository: ILessonRepository,
   ) {}
 
-  async execute({ auth, props }: ScheduleLessonCommand) {
-    const instructor = await this.findInstructor(props.instructorId);
-    const student = await this.findStudent(props.studentId);
+  async execute({ auth, props }: ReserveLessonCommand) {
+    const instructor = await this.findInstructor(
+      new InstructorId(props.instructorId),
+    );
 
-    // TODO : make auth checks, namely :
-    // Only the student can schedule a lesson for himself
-    // The instructor can schedule a lesson for any student
-    // Admin can schedule a lesson for any student & any instructor
+    const student = await this.findStudent(auth.getStudentId());
 
     const dayOfLesson = startOfDay(props.scheduledAt.start);
     const range = new DateRange(props.scheduledAt.start, props.scheduledAt.end);
@@ -97,19 +122,19 @@ export class ScheduleLessonCommandHandler {
     await this.studentRepository.save(student);
   }
 
-  private findInstructor(instructorId: string) {
+  private findInstructor(id: InstructorId) {
     return this.instructorRepository
-      .findById(new InstructorId(instructorId))
+      .findById(id)
       .then((q) =>
-        q.getOrThrow(() => new NotFoundException('Instructor', instructorId)),
+        q.getOrThrow(() => new NotFoundException('Instructor', id.asString())),
       );
   }
 
-  private findStudent(studentId: string) {
+  private findStudent(id: StudentId) {
     return this.studentRepository
-      .findById(new StudentId(studentId))
+      .findById(id)
       .then((q) =>
-        q.getOrThrow(() => new NotFoundException('Student', studentId)),
+        q.getOrThrow(() => new NotFoundException('Student', id.asString())),
       );
   }
 }

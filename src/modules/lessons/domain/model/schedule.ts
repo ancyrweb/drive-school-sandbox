@@ -1,4 +1,4 @@
-import { DateRange } from '../../../shared/domain/date-range.js';
+import { DateRange } from './date-range.js';
 
 export class Schedule {
   isAvailable(range: DateRange) {

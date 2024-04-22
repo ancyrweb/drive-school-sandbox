@@ -1,5 +1,5 @@
-import { InvariantException } from '../exceptions/invariant-exception.js';
-import { Seconds } from './seconds.js';
+import { InvariantException } from '../../../shared/exceptions/invariant-exception.js';
+import { Seconds } from '../../../shared/domain/seconds.js';
 
 export type DateRangeSnapshot = {
   start: string;
@@ -15,6 +15,14 @@ export class DateRange {
       throw new InvariantException(
         'Start date cannot be greater than end date',
       );
+    }
+
+    if (start.getMinutes() !== 0 || end.getMinutes() !== 0) {
+      throw new InvariantException('dates must be aligned to the hour');
+    }
+
+    if (start.getSeconds() !== 0 || end.getSeconds() !== 0) {
+      throw new InvariantException('dates must be aligned to the hour');
     }
   }
 

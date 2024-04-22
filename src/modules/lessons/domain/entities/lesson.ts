@@ -1,8 +1,5 @@
 import { LessonId } from './lesson-id.js';
-import {
-  DateRange,
-  DateRangeSnapshot,
-} from '../../../shared/domain/date-range.js';
+import { DateRange, DateRangeSnapshot } from '../model/date-range.js';
 import { CreditPoints } from '../../../auth/domain/model/credit-points.js';
 import { InstructorId } from '../../../auth/domain/entities/instructor-id.js';
 import { StudentId } from '../../../auth/domain/entities/student-id.js';
