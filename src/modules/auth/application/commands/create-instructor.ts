@@ -26,7 +26,7 @@ import { User } from '../../domain/entities/user.js';
 import { Instructor } from '../../domain/entities/instructor.js';
 import { Account } from '../../domain/model/account.js';
 
-export class CreateInstructor extends AbstractCommand<{
+export class CreateInstructorCommand extends AbstractCommand<{
   id: string;
   emailAddress: string;
   password: string;
@@ -48,9 +48,9 @@ export class CreateInstructor extends AbstractCommand<{
   }
 }
 
-@CommandHandler(CreateInstructor)
+@CommandHandler(CreateInstructorCommand)
 export class CreateInstructorCommandHandler
-  implements ICommandHandler<CreateInstructor>
+  implements ICommandHandler<CreateInstructorCommand>
 {
   constructor(
     @Inject(I_USER_REPOSITORY)
@@ -63,7 +63,7 @@ export class CreateInstructorCommandHandler
     private readonly apiKeyGenerator: IApiKeyGenerator,
   ) {}
 
-  async execute({ props }: CreateInstructor) {
+  async execute({ props }: CreateInstructorCommand) {
     await this.assertEmailAddressIsAvailable(props.emailAddress);
 
     const instructor = Instructor.newAccount({

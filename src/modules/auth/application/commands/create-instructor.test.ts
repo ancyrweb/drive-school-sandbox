@@ -1,7 +1,7 @@
 import { RamInstructorRepository } from '../../infrastructure/persistence/ram/ram-instructor-repository.js';
 import { Argon2Strategy } from '../services/password-strategy/argon2-strategy.js';
 import {
-  CreateInstructor,
+  CreateInstructorCommand,
   CreateInstructorCommandHandler,
 } from './create-instructor.js';
 import { AuthSeeds } from '../../tests/seeds/auth-seeds.js';
@@ -44,7 +44,7 @@ describe('Feature: creating an instructor', () => {
   });
 
   describe('Scenario: happy path', () => {
-    const command = new CreateInstructor(AuthSeeds.admin(), {
+    const command = new CreateInstructorCommand(AuthSeeds.admin(), {
       id: 'my-id',
       emailAddress: 'johndoe@gmail.com',
       password: 'azerty123',
@@ -132,7 +132,7 @@ describe('Feature: creating an instructor', () => {
     });
 
     it('should fail', async () => {
-      const command = new CreateInstructor(AuthSeeds.admin(), {
+      const command = new CreateInstructorCommand(AuthSeeds.admin(), {
         id: 'my-id',
         emailAddress: 'johndoe@gmail.com',
         password: 'azerty123',

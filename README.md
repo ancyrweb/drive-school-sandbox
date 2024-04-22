@@ -49,16 +49,14 @@ A student can
 # Other resources
 - [Do you need a persistent domain model ? Khorikov](https://khorikov.org/posts/2020-04-20-when-do-you-need-persistence-model/)
 
-```ts
-  async up(): Promise<void> {
-    const password = new Argon2Strategy().hash('azerty123');
+# Development Notes
+## Account class
 
-    this.addSql(
-      `INSERT INTO apikeys (id, created_at, updated_at, value) VALUES ('1', NOW(), NOW(), 'apikey')`,
-    );
+First use Typescript discriminated unions to represent the various type of accounts.
+Then show how to refactor using classes.
 
-    this.addSql(
-      `INSERT INTO users (id, created_at, updated_at, email_address, password, apikey_id, account) VALUES ('1', NOW(), NOW(), 'contact@ancyracademy.fr', '${password}', '1', '{"type": "admin", "id": "1"}')`,
-    );
-  }
-```
+## Lesson scheduling
+
+Show how to program by wishful thinking by writing the code (even with errors) that you would
+like to use.
+Then glue the code using interfaces, delete all the pseudo-code and start writing tests.

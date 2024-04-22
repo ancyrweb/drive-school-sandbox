@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateInstructor } from '../commands/create-instructor.js';
+import { CreateInstructorCommand } from '../commands/create-instructor.js';
 import { WithAuthContext } from '../annotations/with-auth-context.js';
 import { AuthContext } from '../../domain/model/auth-context.js';
 import { UpdateInstructorCommand } from '../commands/update-instructor.js';
@@ -12,10 +12,10 @@ export class AuthController {
 
   @Post('create-instructor')
   async createInstructor(
-    @Body() body: GetCommandPayload<CreateInstructor>,
+    @Body() body: GetCommandPayload<CreateInstructorCommand>,
     @WithAuthContext() auth: AuthContext,
   ) {
-    return this.commandBus.execute(new CreateInstructor(auth, body));
+    return this.commandBus.execute(new CreateInstructorCommand(auth, body));
   }
 
   @Post('update-instructor')

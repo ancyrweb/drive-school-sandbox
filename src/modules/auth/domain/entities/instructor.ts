@@ -24,13 +24,7 @@ export class Instructor extends AggregateRoot<InstructorId, State, Snapshot> {
 
   static newAccount(props: Props): Instructor {
     const instructor = new Instructor(props);
-    instructor.raise(
-      new InstructorCreatedEvent({
-        id: instructor._state.id.value,
-        firstName: instructor._state.firstName,
-        lastName: instructor._state.lastName,
-      }),
-    );
+    instructor.raise(new InstructorCreatedEvent(instructor.takeSnapshot()));
 
     return instructor;
   }
