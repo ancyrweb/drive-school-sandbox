@@ -1,5 +1,11 @@
 import { DateRange } from './date-range.js';
 
+const hours = (a: string, b: string) =>
+  new DateRange(
+    new Date(`2021-01-01T${a}:00:00Z`),
+    new Date(`2021-01-01T${b}:00:00Z`),
+  );
+
 test('creating a date range with invalid dates should throw an error', () => {
   expect(() => {
     new DateRange(new Date('2021-01-02'), new Date('2021-01-01'));
@@ -77,4 +83,33 @@ test('restoring from a snapshot', () => {
       new Date('2021-01-01T01:00:00Z'),
     ),
   );
+});
+
+test('not overlapping', () => {
+  const dateRange = new DateRange(
+    new Date('2021-01-01T00:00:00Z'),
+    new Date('2021-01-01T02:00:00Z'),
+  );
+
+  const overlapping = new DateRange(
+    new Date('2021-01-01T02:00:00Z'),
+    new Date('2021-01-01T04:00:00Z'),
+  );
+
+  expect(dateRange.overlaps(overlapping)).toBe(false);
+});
+
+test.each([
+  [hours('00', '02'), hours('02', '04')],
+  [hours('00', '01'), hours('02', '03')],
+])('not overlapping', (first, second) => {
+  expect(first.overlaps(second)).toBe(false);
+});
+
+test.each([
+  [hours('00', '02'), hours('01', '03')],
+  [hours('01', '03'), hours('00', '02')],
+  [hours('02', '04'), hours('02', '04')],
+])('overlapping', (first, second) => {
+  expect(first.overlaps(second)).toBe(true);
 });

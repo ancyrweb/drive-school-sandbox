@@ -1,7 +1,10 @@
 import { DateRange } from './date-range.js';
+import { ISchedule } from './schedule.interface.js';
 
-export class Schedule {
+export class Schedule implements ISchedule {
+  constructor(private readonly dateRanges: DateRange[]) {}
+
   isAvailable(range: DateRange) {
-    return true;
+    return this.dateRanges.every((dateRange) => !dateRange.overlaps(range));
   }
 }

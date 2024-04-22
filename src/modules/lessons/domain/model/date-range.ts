@@ -40,4 +40,13 @@ export class DateRange {
   duration(): Seconds {
     return new Seconds((this.end.getTime() - this.start.getTime()) / 1000);
   }
+
+  overlaps(other: DateRange): boolean {
+    return (
+      (other.start.getTime() >= this.start.getTime() &&
+        other.start.getTime() < this.end.getTime()) ||
+      (other.end.getTime() > this.start.getTime() &&
+        other.end.getTime() < this.end.getTime())
+    );
+  }
 }
