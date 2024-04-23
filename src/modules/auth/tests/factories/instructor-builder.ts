@@ -2,12 +2,12 @@ import { GetFactoryProps } from '../../../shared/utils/types.js';
 import { Instructor } from '../../domain/entities/instructor.js';
 import { InstructorId } from '../../domain/entities/instructor-id.js';
 
-type InstructorProps = GetFactoryProps<typeof Instructor>;
+type Props = GetFactoryProps<typeof Instructor>;
 
 export class InstructorBuilder {
-  private props: InstructorProps;
+  private props: Props;
 
-  constructor(props?: Partial<InstructorProps>) {
+  constructor(props?: Partial<Props>) {
     this.props = {
       id: new InstructorId(),
       firstName: 'John',

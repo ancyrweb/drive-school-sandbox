@@ -5,12 +5,12 @@ import { AdminId } from '../../domain/entities/admin-id.js';
 import { Account } from '../../domain/model/account.js';
 import { Apikey } from '../../domain/entities/apikey.js';
 
-type UserProps = GetFactoryProps<typeof User>;
+type Props = GetFactoryProps<typeof User>;
 
 export class UserBuilder {
-  private props: UserProps;
+  private props: Props;
 
-  constructor(props?: Partial<UserProps>) {
+  constructor(props?: Partial<Props>) {
     const id = props?.id ?? new UserId();
 
     this.props = {

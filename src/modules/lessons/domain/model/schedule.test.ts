@@ -1,7 +1,7 @@
 import { DateRange } from './date-range.js';
 import { Schedule } from './schedule.js';
 
-test('should be available', () => {
+test('available when the schedule is empty', () => {
   const ranges = [];
   const at = new DateRange(
     new Date('2024-01-01T09:00:00Z'),
@@ -12,7 +12,7 @@ test('should be available', () => {
   expect(schedule.isAvailable(at)).toBe(true);
 });
 
-test('should not be available', () => {
+test('not available when the slot is taken', () => {
   const ranges = [
     new DateRange(
       new Date('2024-01-01T08:00:00Z'),
@@ -29,7 +29,7 @@ test('should not be available', () => {
   expect(schedule.isAvailable(at)).toBe(false);
 });
 
-test('should be available', () => {
+test('available between two slots', () => {
   const ranges = [
     new DateRange(
       new Date('2024-01-01T08:00:00Z'),

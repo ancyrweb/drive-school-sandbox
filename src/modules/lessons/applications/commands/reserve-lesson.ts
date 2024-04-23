@@ -68,7 +68,7 @@ export class ReserveLessonCommandHandler {
     @Inject(I_STUDENT_REPOSITORY)
     private readonly studentRepository: IStudentRepository,
     @Inject(I_SCHEDULE_PROVIDER)
-    private readonly scheduleService: IScheduleProvider,
+    private readonly scheduleProvider: IScheduleProvider,
     @Inject(I_LESSON_REPOSITORY)
     private readonly lessonRepository: ILessonRepository,
   ) {}
@@ -84,12 +84,12 @@ export class ReserveLessonCommandHandler {
     const range = new DateRange(props.scheduledAt.start, props.scheduledAt.end);
     const creditsToConsume = new CreditPoints(range.duration().asHours());
 
-    const instructorSchedule = await this.scheduleService.findAtDay(
+    const instructorSchedule = await this.scheduleProvider.findAtDay(
       instructor.getId(),
       dayOfLesson,
     );
 
-    const studentSchedule = await this.scheduleService.findAtDay(
+    const studentSchedule = await this.scheduleProvider.findAtDay(
       student.getId(),
       dayOfLesson,
     );
