@@ -18,6 +18,16 @@ export class StudentBuilder {
     };
   }
 
+  id(id: string) {
+    this.props.id = new StudentId(id);
+    return this;
+  }
+
+  creditPoints(creditPoints: number) {
+    this.props.creditPoints = new CreditPoints(creditPoints);
+    return this;
+  }
+
   build() {
     return Student.create(this.props);
   }

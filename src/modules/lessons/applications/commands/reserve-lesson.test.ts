@@ -98,7 +98,7 @@ describe('Feature: reserving a lesson', () => {
     lessonRepository.clear();
 
     instructorRepository.saveSync(
-      new InstructorBuilder({ id: new InstructorId('instructor-id') }).build(),
+      new InstructorBuilder().id('instructor-id').build(),
     );
   });
 
@@ -107,10 +107,7 @@ describe('Feature: reserving a lesson', () => {
 
     beforeEach(() => {
       studentRepository.saveSync(
-        new StudentBuilder({
-          id: new StudentId('student-id'),
-          creditPoints: new CreditPoints(4),
-        }).build(),
+        new StudentBuilder().id('student-id').creditPoints(4).build(),
       );
     });
 
@@ -146,10 +143,7 @@ describe('Feature: reserving a lesson', () => {
   describe('Scenario: the instructor does not exist', () => {
     beforeEach(() => {
       studentRepository.saveSync(
-        new StudentBuilder({
-          id: new StudentId('student-id'),
-          creditPoints: new CreditPoints(4),
-        }).build(),
+        new StudentBuilder().id('student-id').creditPoints(4).build(),
       );
     });
 
@@ -169,10 +163,7 @@ describe('Feature: reserving a lesson', () => {
   describe('Scenario: the student does not have enough credit', () => {
     beforeEach(() => {
       studentRepository.saveSync(
-        new StudentBuilder({
-          id: new StudentId('student-id'),
-          creditPoints: new CreditPoints(1),
-        }).build(),
+        new StudentBuilder().id('student-id').creditPoints(1).build(),
       );
     });
 
@@ -217,10 +208,7 @@ describe('Feature: reserving a lesson', () => {
   describe('Scenario: the student is busy', () => {
     beforeEach(() => {
       studentRepository.saveSync(
-        new StudentBuilder({
-          id: new StudentId('student-id'),
-          creditPoints: new CreditPoints(4),
-        }).build(),
+        new StudentBuilder().id('student-id').creditPoints(4).build(),
       );
     });
 

@@ -16,6 +16,11 @@ export class InstructorBuilder {
     };
   }
 
+  id(id: string) {
+    this.props.id = new InstructorId(id);
+    return this;
+  }
+
   build() {
     return Instructor.create(this.props);
   }

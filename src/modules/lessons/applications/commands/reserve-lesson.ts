@@ -29,6 +29,8 @@ import {
 } from '../ports/lesson-repository.js';
 import { AuthContext } from '../../../auth/domain/model/auth-context.js';
 import { Inject } from '@nestjs/common';
+import { Student } from '../../../auth/domain/entities/student.js';
+import { Instructor } from '../../../auth/domain/entities/instructor.js';
 
 export class ReserveLessonCommand extends AbstractCommand<{
   lessonId: string;
@@ -77,36 +79,15 @@ export class ReserveLessonCommandHandler {
     const instructor = await this.findInstructor(
       new InstructorId(props.instructorId),
     );
-
     const student = await this.findStudent(auth.getStudentId());
 
     const dayOfLesson = startOfDay(props.scheduledAt.start);
     const range = new DateRange(props.scheduledAt.start, props.scheduledAt.end);
     const creditsToConsume = new CreditPoints(range.duration().asHours());
 
-    const instructorSchedule = await this.scheduleProvider.findAtDay(
-      instructor.getId(),
-      dayOfLesson,
-    );
-
-    const studentSchedule = await this.scheduleProvider.findAtDay(
-      student.getId(),
-      dayOfLesson,
-    );
-
-    if (!instructorSchedule.isAvailable(range)) {
-      throw new BadRequestException('Instructor is not available');
-    }
-
-    if (!studentSchedule.isAvailable(range)) {
-      throw new BadRequestException('Student is not available');
-    }
-
-    if (!student.canConsume(creditsToConsume)) {
-      throw new BadRequestException(
-        "You don't have enough points to schedule this lesson",
-      );
-    }
+    await this.checkInstructorSchedule(instructor, dayOfLesson, range);
+    await this.checkStudentSchedule(student, dayOfLesson, range);
+    this.checkStudentsCredits(student, creditsToConsume);
 
     const lesson = Lesson.newLesson({
       id: new LessonId(props.lessonId),
@@ -120,6 +101,47 @@ export class ReserveLessonCommandHandler {
 
     await this.lessonRepository.save(lesson);
     await this.studentRepository.save(student);
+  }
+
+  private checkStudentsCredits(
+    student: Student,
+    creditsToConsume: CreditPoints,
+  ) {
+    if (!student.canConsume(creditsToConsume)) {
+      throw new BadRequestException(
+        "You don't have enough points to schedule this lesson",
+      );
+    }
+  }
+
+  private async checkStudentSchedule(
+    student: Student,
+    dayOfLesson: Date,
+    range: DateRange,
+  ) {
+    const studentSchedule = await this.scheduleProvider.findAtDay(
+      student.getId(),
+      dayOfLesson,
+    );
+
+    if (!studentSchedule.isAvailable(range)) {
+      throw new BadRequestException('Student is not available');
+    }
+  }
+
+  private async checkInstructorSchedule(
+    instructor: Instructor,
+    dayOfLesson: Date,
+    range: DateRange,
+  ) {
+    const instructorSchedule = await this.scheduleProvider.findAtDay(
+      instructor.getId(),
+      dayOfLesson,
+    );
+
+    if (!instructorSchedule.isAvailable(range)) {
+      throw new BadRequestException('Instructor is not available');
+    }
   }
 
   private findInstructor(id: InstructorId) {
