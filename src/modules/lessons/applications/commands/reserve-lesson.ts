@@ -82,28 +82,31 @@ export class ReserveLessonCommandHandler {
     const student = await this.findStudent(auth.getStudentId());
 
     const dayOfLesson = startOfDay(props.scheduledAt.start);
-    const range = new DateRange(props.scheduledAt.start, props.scheduledAt.end);
-    const creditsToConsume = new CreditPoints(range.duration().asHours());
+    const scheduledAt = new DateRange(
+      props.scheduledAt.start,
+      props.scheduledAt.end,
+    );
+    const creditsToConsume = new CreditPoints(scheduledAt.duration().asHours());
 
-    await this.checkInstructorSchedule(instructor, dayOfLesson, range);
-    await this.checkStudentSchedule(student, dayOfLesson, range);
-    this.checkStudentsCredits(student, creditsToConsume);
+    await this.checkInstructorIsAvailable(instructor, dayOfLesson, scheduledAt);
+    await this.checkStudentIsAvailable(student, dayOfLesson, scheduledAt);
+    this.checkStudentHasEnoughCredit(student, creditsToConsume);
 
     const lesson = Lesson.newLesson({
       id: new LessonId(props.lessonId),
       instructorId: instructor.getId(),
       studentId: student.getId(),
-      scheduledAt: range,
+      scheduledAt,
       creditsConsumed: creditsToConsume,
     });
 
-    student.consume(creditsToConsume);
+    student.pay(creditsToConsume);
 
     await this.lessonRepository.save(lesson);
     await this.studentRepository.save(student);
   }
 
-  private checkStudentsCredits(
+  private checkStudentHasEnoughCredit(
     student: Student,
     creditsToConsume: CreditPoints,
   ) {
@@ -114,7 +117,7 @@ export class ReserveLessonCommandHandler {
     }
   }
 
-  private async checkStudentSchedule(
+  private async checkStudentIsAvailable(
     student: Student,
     dayOfLesson: Date,
     range: DateRange,
@@ -129,7 +132,7 @@ export class ReserveLessonCommandHandler {
     }
   }
 
-  private async checkInstructorSchedule(
+  private async checkInstructorIsAvailable(
     instructor: Instructor,
     dayOfLesson: Date,
     range: DateRange,

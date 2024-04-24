@@ -44,7 +44,11 @@ export class Student extends AggregateRoot<StudentId, State, Snapshot> {
     return this._state.creditPoints.canConsume(value);
   }
 
-  consume(value: CreditPoints): void {
+  pay(value: CreditPoints): void {
     this._state.creditPoints = this._state.creditPoints.subtract(value);
+  }
+
+  refund(value: CreditPoints): void {
+    this._state.creditPoints = this._state.creditPoints.add(value);
   }
 }

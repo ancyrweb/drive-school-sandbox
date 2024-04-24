@@ -9,6 +9,10 @@ export class Seconds {
     return new Seconds(0);
   }
 
+  static milliseconds(value: number) {
+    return new Seconds(Math.floor(value / 1000));
+  }
+
   static minutes(value: number) {
     return new Seconds(value * 60);
   }
@@ -25,11 +29,19 @@ export class Seconds {
     return this.value === other.value;
   }
 
+  isLessThan(other: Seconds): boolean {
+    return this.value < other.value;
+  }
+
   difference(other: Seconds): Seconds {
     return new Seconds(Math.abs(this.value - other.value));
   }
 
   asHours() {
     return Math.round(this.value / 60 / 60);
+  }
+
+  asMinutes() {
+    return Math.round(this.value / 60);
   }
 }

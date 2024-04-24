@@ -41,6 +41,10 @@ export class DateRange {
     return new Seconds((this.end.getTime() - this.start.getTime()) / 1000);
   }
 
+  startsIn(now: Date): Seconds {
+    return new Seconds((this.start.getTime() - now.getTime()) / 1000);
+  }
+
   overlaps(other: DateRange): boolean {
     return (
       (other.start.getTime() >= this.start.getTime() &&

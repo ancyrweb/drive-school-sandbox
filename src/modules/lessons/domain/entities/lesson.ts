@@ -4,6 +4,9 @@ import { CreditPoints } from '../../../auth/domain/model/credit-points.js';
 import { InstructorId } from '../../../auth/domain/entities/instructor-id.js';
 import { StudentId } from '../../../auth/domain/entities/student-id.js';
 import { AggregateRoot } from '../../../shared/lib/aggregate-root.js';
+import { Student } from '../../../auth/domain/entities/student.js';
+import { IDateProvider } from '../../../shared/services/date-provider/date-provider.interface.js';
+import { Seconds } from '../../../shared/domain/seconds.js';
 
 type State = {
   id: LessonId;
@@ -30,6 +33,28 @@ export class Lesson extends AggregateRoot<LessonId, State, Snapshot> {
 
   static newLesson(props: Props): Lesson {
     return new Lesson(props);
+  }
+
+  getStudentId(): StudentId {
+    return this._state.studentId;
+  }
+
+  getInstructorId(): InstructorId {
+    return this._state.instructorId;
+  }
+
+  refund(student: Student) {
+    student.refund(this._state.creditsConsumed);
+  }
+
+  isRefundableByStudent(dateProvider: IDateProvider): boolean {
+    const startsIn = this._state.scheduledAt.startsIn(dateProvider.now());
+    return !startsIn.isLessThan(Seconds.hours(24));
+  }
+
+  isCancellableByStudent(dateProvider: IDateProvider): boolean {
+    const startsIn = this._state.scheduledAt.startsIn(dateProvider.now());
+    return !startsIn.isLessThan(Seconds.hours(2));
   }
 
   takeSnapshot(): Snapshot {
