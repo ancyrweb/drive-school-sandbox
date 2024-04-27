@@ -14,10 +14,14 @@ import { StudentId } from '../../../auth/domain/entities/student-id.js';
 import { AuthSeeds } from '../../../auth/tests/seeds/auth-seeds.js';
 import { CreditPoints } from '../../../auth/domain/model/credit-points.js';
 import { LessonId } from '../../domain/entities/lesson-id.js';
-import { expectNotFound } from '../../../shared/utils/test-utils.js';
+import {
+  expectEventToBeRaised,
+  expectNotFound,
+} from '../../../shared/utils/test-utils.js';
 import { BadRequestException } from '../../../shared/exceptions/bad-request-exception.js';
 import { ISchedule } from '../../domain/model/schedule.interface.js';
 import { GetCommandPayload } from '../../../shared/lib/command.js';
+import { LessonReservedEvent } from '../../domain/events/lesson-reserved-event.js';
 
 class NeverAvailableSchedule implements ISchedule {
   isAvailable(): boolean {
@@ -92,6 +96,33 @@ describe('Feature: reserving a lesson', () => {
     expect(student.creditPoints).toEqual(credits);
   };
 
+  const expectLessonToBeReserved = () => {
+    const lesson = lessonRepository.findByIdSync(new LessonId('lesson-id'))!;
+    const snapshot = lesson.takeSnapshot();
+
+    expect(snapshot.instructorId).toEqual('instructor-id');
+    expect(snapshot.studentId).toEqual('student-id');
+    expect(snapshot.scheduledAt.start).toEqual(
+      new Date('2021-01-01T10:00:00Z'),
+    );
+    expect(snapshot.scheduledAt.end).toEqual(new Date('2021-01-01T12:00:00Z'));
+    expect(snapshot.creditsConsumed).toEqual(2);
+
+    expectEventToBeRaised(
+      lesson.getEvents(),
+      new LessonReservedEvent({
+        lessonId: 'lesson-id',
+        instructorId: 'instructor-id',
+        studentId: 'student-id',
+        scheduledAt: {
+          start: new Date('2021-01-01T10:00:00Z'),
+          end: new Date('2021-01-01T12:00:00Z'),
+        },
+        creditsConsumed: 2,
+      }),
+    );
+  };
+
   beforeEach(() => {
     instructorRepository.clear();
     studentRepository.clear();
@@ -117,16 +148,7 @@ describe('Feature: reserving a lesson', () => {
       });
 
       await commandHandler.execute(command);
-
-      const lesson = lessonRepository
-        .findByIdSync(new LessonId('lesson-id'))!
-        .takeSnapshot();
-
-      expect(lesson.instructorId).toEqual('instructor-id');
-      expect(lesson.studentId).toEqual('student-id');
-      expect(lesson.scheduledAt.start).toEqual('2021-01-01T10:00:00.000Z');
-      expect(lesson.scheduledAt.end).toEqual('2021-01-01T12:00:00.000Z');
-      expect(lesson.creditsConsumed).toEqual(2);
+      expectLessonToBeReserved();
     });
 
     it('should deduce the points from the students credit', async () => {

@@ -81,18 +81,18 @@ export class ReserveLessonCommandHandler {
     );
     const student = await this.findStudent(auth.getStudentId());
 
-    const dayOfLesson = startOfDay(props.scheduledAt.start);
     const scheduledAt = new DateRange(
       props.scheduledAt.start,
       props.scheduledAt.end,
     );
     const creditsToConsume = new CreditPoints(scheduledAt.duration().asHours());
+    const dayOfLesson = startOfDay(props.scheduledAt.start);
 
     await this.checkInstructorIsAvailable(instructor, dayOfLesson, scheduledAt);
     await this.checkStudentIsAvailable(student, dayOfLesson, scheduledAt);
     this.checkStudentHasEnoughCredit(student, creditsToConsume);
 
-    const lesson = Lesson.newLesson({
+    const lesson = Lesson.reserve({
       id: new LessonId(props.lessonId),
       instructorId: instructor.getId(),
       studentId: student.getId(),
@@ -106,11 +106,8 @@ export class ReserveLessonCommandHandler {
     await this.studentRepository.save(student);
   }
 
-  private checkStudentHasEnoughCredit(
-    student: Student,
-    creditsToConsume: CreditPoints,
-  ) {
-    if (!student.canConsume(creditsToConsume)) {
+  private checkStudentHasEnoughCredit(student: Student, credits: CreditPoints) {
+    if (!student.canConsume(credits)) {
       throw new BadRequestException(
         "You don't have enough points to schedule this lesson",
       );
@@ -119,30 +116,30 @@ export class ReserveLessonCommandHandler {
 
   private async checkStudentIsAvailable(
     student: Student,
-    dayOfLesson: Date,
+    day: Date,
     range: DateRange,
   ) {
-    const studentSchedule = await this.scheduleProvider.findAtDay(
+    const schedule = await this.scheduleProvider.findAtDay(
       student.getId(),
-      dayOfLesson,
+      day,
     );
 
-    if (!studentSchedule.isAvailable(range)) {
+    if (!schedule.isAvailable(range)) {
       throw new BadRequestException('Student is not available');
     }
   }
 
   private async checkInstructorIsAvailable(
     instructor: Instructor,
-    dayOfLesson: Date,
+    day: Date,
     range: DateRange,
   ) {
-    const instructorSchedule = await this.scheduleProvider.findAtDay(
+    const schedule = await this.scheduleProvider.findAtDay(
       instructor.getId(),
-      dayOfLesson,
+      day,
     );
 
-    if (!instructorSchedule.isAvailable(range)) {
+    if (!schedule.isAvailable(range)) {
       throw new BadRequestException('Instructor is not available');
     }
   }

@@ -21,6 +21,7 @@ import {
   I_DATE_PROVIDER,
   IDateProvider,
 } from '../../../shared/services/date-provider/date-provider.interface.js';
+import { Student } from '../../../auth/domain/entities/student.js';
 
 export class CancelLessonCommand extends AbstractCommand<{
   lessonId: string;
@@ -44,37 +45,42 @@ export class CancelLessonCommandHandler {
   ) {}
 
   async execute({ auth, props }: CancelLessonCommand) {
-    // Fetch the lesson
-    // Three cases :
-    // The requester is an admin, he can cancel any lesson
-    // The requester is an instructor, he can cancel the lesson if he is the instructor of the lesson
-    // The requester is a student, he can cancel the lesson if he is the student of the lesson
-    // Then we must 1) cancel the lesson and 2) give back the credits
-    // Note : if the requester is a student AND the lesson is in <24 hours, the credits are not given back
-    // Note : the admin and instructor can cancel the lesson at any time
-    // Note : the student can only cancel the lesson 2 hours before the lesson
-
     const lesson = await this.getLesson(new LessonId(props.lessonId));
-
-    if (auth.isInstructor()) {
-      this.checkInstructorIsAuthorized(auth, lesson);
-    }
     const student = await this.getStudent(lesson.getStudentId());
 
-    if (auth.isStudent()) {
-      if (!lesson.isCancellableByStudent(this.dateProvider)) {
-        throw new NotAuthorizedException();
-      }
-
-      if (lesson.isRefundableByStudent(this.dateProvider)) {
-        lesson.refund(student);
-      }
-    } else {
-      lesson.refund(student);
-    }
+    this.checkAuthorization(auth, lesson);
+    this.eventuallyRefund(auth, lesson, student);
 
     await this.lessonRepository.delete(lesson);
     await this.studentRepository.save(student);
+  }
+
+  private eventuallyRefund(
+    auth: AuthContext,
+    lesson: Lesson,
+    student: Student,
+  ) {
+    if (auth.isStudent()) {
+      if (!lesson.isRefundableByStudent(this.dateProvider)) {
+        return;
+      }
+    }
+
+    lesson.refund(student);
+  }
+
+  private checkAuthorization(auth: AuthContext, lesson: Lesson) {
+    if (auth.isInstructor()) {
+      this.checkInstructorIsAuthorized(auth, lesson);
+    } else if (auth.isStudent()) {
+      this.checkIfCancellableByStudent(lesson);
+    }
+  }
+
+  private checkIfCancellableByStudent(lesson: Lesson) {
+    if (!lesson.isCancellableByStudent(this.dateProvider)) {
+      throw new NotAuthorizedException('you can no longer cancel this lesson');
+    }
   }
 
   private checkInstructorIsAuthorized(auth: AuthContext, lesson: Lesson) {
@@ -84,7 +90,7 @@ export class CancelLessonCommandHandler {
   }
 
   private async getStudent(studentId: StudentId) {
-    return await this.studentRepository
+    return this.studentRepository
       .findById(studentId)
       .then((q) =>
         q.getOrThrow(
@@ -94,7 +100,7 @@ export class CancelLessonCommandHandler {
   }
 
   private async getLesson(lessonId: LessonId) {
-    return await this.lessonRepository
+    return this.lessonRepository
       .findById(lessonId)
       .then((q) =>
         q.getOrThrow(

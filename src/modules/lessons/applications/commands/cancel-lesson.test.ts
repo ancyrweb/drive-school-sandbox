@@ -47,11 +47,6 @@ describe('Feature: canceling a lesson', () => {
     expect(lesson).toBe(null);
   }
 
-  function expectLessonToBeRemainScheduled() {
-    const lesson = lessonRepository.findByIdSync(new LessonId('lesson-id'));
-    expect(lesson).not.toBe(null);
-  }
-
   beforeEach(() => {
     lessonRepository.clear();
     studentRepository.clear();
@@ -153,7 +148,7 @@ describe('Feature: canceling a lesson', () => {
       });
     });
 
-    describe('Scenario: the student cancels less than 24 hours before the lesson but more than 2 hours', () => {
+    describe('Scenario: the student cancels less than 24 hours but more than 2 hours', () => {
       const command = new CancelLessonCommand(AuthSeeds.student('student-id'), {
         lessonId: 'lesson-id',
       });
@@ -186,7 +181,7 @@ describe('Feature: canceling a lesson', () => {
 
       const fixedDate = new Date('2024-01-15T08:01:00.000Z');
 
-      it('should cancel the lesson', async () => {
+      it('should fail', async () => {
         const commandHandler = createCommandHandler({
           dateProvider: new FixedDateProvider(fixedDate),
         });

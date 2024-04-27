@@ -7,6 +7,7 @@ import { AggregateRoot } from '../../../shared/lib/aggregate-root.js';
 import { Student } from '../../../auth/domain/entities/student.js';
 import { IDateProvider } from '../../../shared/services/date-provider/date-provider.interface.js';
 import { Seconds } from '../../../shared/domain/seconds.js';
+import { LessonReservedEvent } from '../events/lesson-reserved-event.js';
 
 type State = {
   id: LessonId;
@@ -31,8 +32,18 @@ export class Lesson extends AggregateRoot<LessonId, State, Snapshot> {
     return new Lesson(props);
   }
 
-  static newLesson(props: Props): Lesson {
-    return new Lesson(props);
+  static reserve(props: Props): Lesson {
+    const lesson = new Lesson(props);
+    lesson.raise(
+      new LessonReservedEvent({
+        lessonId: lesson._state.id.asString(),
+        instructorId: lesson._state.instructorId.asString(),
+        studentId: lesson._state.studentId.asString(),
+        scheduledAt: lesson._state.scheduledAt.takeSnapshot(),
+        creditsConsumed: lesson._state.creditsConsumed.getValue(),
+      }),
+    );
+    return lesson;
   }
 
   getStudentId(): StudentId {

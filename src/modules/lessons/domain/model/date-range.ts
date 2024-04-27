@@ -2,8 +2,8 @@ import { InvariantException } from '../../../shared/exceptions/invariant-excepti
 import { Seconds } from '../../../shared/domain/seconds.js';
 
 export type DateRangeSnapshot = {
-  start: string;
-  end: string;
+  start: Date;
+  end: Date;
 };
 
 export class DateRange {
@@ -27,13 +27,13 @@ export class DateRange {
   }
 
   static fromSnapshot(snapshot: DateRangeSnapshot): DateRange {
-    return new DateRange(new Date(snapshot.start), new Date(snapshot.end));
+    return new DateRange(snapshot.start, snapshot.end);
   }
 
   takeSnapshot(): DateRangeSnapshot {
     return {
-      start: this.start.toISOString(),
-      end: this.end.toISOString(),
+      start: this.start,
+      end: this.end,
     };
   }
 

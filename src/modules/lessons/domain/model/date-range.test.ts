@@ -64,15 +64,15 @@ test('taking a snapshot', () => {
   );
 
   expect(dateRange.takeSnapshot()).toEqual({
-    start: '2021-01-01T00:00:00.000Z',
-    end: '2021-01-01T01:00:00.000Z',
+    start: new Date('2021-01-01T00:00:00Z'),
+    end: new Date('2021-01-01T01:00:00Z'),
   });
 });
 
 test('restoring from a snapshot', () => {
   const snapshot = {
-    start: '2021-01-01T00:00:00.000Z',
-    end: '2021-01-01T01:00:00.000Z',
+    start: new Date('2021-01-01T00:00:00.000Z'),
+    end: new Date('2021-01-01T01:00:00.000Z'),
   };
 
   const dateRange = DateRange.fromSnapshot(snapshot);

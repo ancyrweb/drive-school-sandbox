@@ -1,5 +1,9 @@
 export class NotAuthorizedException extends Error {
-  constructor() {
-    super('You are not authorized to perform this action');
+  constructor(reason?: string) {
+    super(
+      reason
+        ? `You are not authorized to perform this action: ${reason}`
+        : 'You are not authorized to perform this action',
+    );
   }
 }
