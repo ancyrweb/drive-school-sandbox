@@ -36,7 +36,7 @@ export class Student extends AggregateRoot<StudentId, State, Snapshot> {
       id: this._state.id.value,
       firstName: this._state.firstName,
       lastName: this._state.lastName,
-      creditPoints: this._state.creditPoints.getValue(),
+      creditPoints: this._state.creditPoints.asNumber(),
     };
   }
 

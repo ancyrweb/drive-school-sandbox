@@ -40,7 +40,7 @@ export class Lesson extends AggregateRoot<LessonId, State, Snapshot> {
         instructorId: lesson._state.instructorId.asString(),
         studentId: lesson._state.studentId.asString(),
         scheduledAt: lesson._state.scheduledAt.takeSnapshot(),
-        creditsConsumed: lesson._state.creditsConsumed.getValue(),
+        creditsConsumed: lesson._state.creditsConsumed.asNumber(),
       }),
     );
     return lesson;
@@ -74,7 +74,7 @@ export class Lesson extends AggregateRoot<LessonId, State, Snapshot> {
       instructorId: this._state.instructorId.value,
       studentId: this._state.studentId.value,
       scheduledAt: this._state.scheduledAt.takeSnapshot(),
-      creditsConsumed: this._state.creditsConsumed.getValue(),
+      creditsConsumed: this._state.creditsConsumed.asNumber(),
     };
   }
 }

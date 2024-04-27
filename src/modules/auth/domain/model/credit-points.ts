@@ -7,10 +7,6 @@ export class CreditPoints {
     }
   }
 
-  static empty() {
-    return new CreditPoints(0);
-  }
-
   subtract(credit: CreditPoints): CreditPoints {
     return new CreditPoints(this.value - credit.value);
   }
@@ -19,11 +15,11 @@ export class CreditPoints {
     return new CreditPoints(this.value + credit.value);
   }
 
-  canConsume(value: CreditPoints): boolean {
-    return this.value >= value.getValue();
+  canConsume(credit: CreditPoints): boolean {
+    return this.value >= credit.value;
   }
 
-  getValue(): number {
+  asNumber(): number {
     return this.value;
   }
 }
