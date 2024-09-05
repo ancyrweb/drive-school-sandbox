@@ -6,13 +6,13 @@ const hours = (a: string, b: string) =>
     new Date(`2021-01-01T${b}:00:00Z`),
   );
 
-test('creating a date range with invalid dates should throw an error', () => {
+test('start date must be before end date', () => {
   expect(() => {
     new DateRange(new Date('2021-01-02'), new Date('2021-01-01'));
   }).toThrowError('Start date cannot be greater than end date');
 });
 
-test('when the delay between 2 dates is 1 hour, return 1 hour', () => {
+test('the delay between 00:00 and 01:00 is 1 hour', () => {
   const dateRange = new DateRange(
     new Date('2021-01-01T00:00:00Z'),
     new Date('2021-01-01T01:00:00Z'),
@@ -21,7 +21,7 @@ test('when the delay between 2 dates is 1 hour, return 1 hour', () => {
   expect(dateRange.duration().asHours()).toBe(1);
 });
 
-test('when the start date is not minute aligned should throw', () => {
+test('start date should be minute-aligned', () => {
   expect(() => {
     new DateRange(
       new Date('2021-01-01T00:01:00Z'),
@@ -30,7 +30,7 @@ test('when the start date is not minute aligned should throw', () => {
   }).toThrowError('dates must be aligned to the hour');
 });
 
-test('when the end date is not minute aligned should throw', () => {
+test('end date should be minute-aligned', () => {
   expect(() => {
     new DateRange(
       new Date('2021-01-01T00:00:00Z'),
@@ -39,7 +39,7 @@ test('when the end date is not minute aligned should throw', () => {
   }).toThrowError('dates must be aligned to the hour');
 });
 
-test('when the start date is not second aligned should throw', () => {
+test('start date should be second-aligned', () => {
   expect(() => {
     new DateRange(
       new Date('2021-01-01T00:00:01Z'),
@@ -48,7 +48,7 @@ test('when the start date is not second aligned should throw', () => {
   }).toThrowError('dates must be aligned to the hour');
 });
 
-test('when the end date is not second aligned should throw', () => {
+test('end date should be second-aligned', () => {
   expect(() => {
     new DateRange(
       new Date('2021-01-01T00:00:00Z'),
@@ -57,7 +57,7 @@ test('when the end date is not second aligned should throw', () => {
   }).toThrowError('dates must be aligned to the hour');
 });
 
-test('taking a snapshot', () => {
+test('snapshot', () => {
   const dateRange = new DateRange(
     new Date('2021-01-01T00:00:00Z'),
     new Date('2021-01-01T01:00:00Z'),
@@ -69,13 +69,13 @@ test('taking a snapshot', () => {
   });
 });
 
-test('restoring from a snapshot', () => {
-  const snapshot = {
-    start: new Date('2021-01-01T00:00:00.000Z'),
-    end: new Date('2021-01-01T01:00:00.000Z'),
-  };
+test('snapshot', () => {
+  const initial = new DateRange(
+    new Date('2021-01-01T00:00:00Z'),
+    new Date('2021-01-01T01:00:00Z'),
+  );
 
-  const dateRange = DateRange.fromSnapshot(snapshot);
+  const dateRange = DateRange.fromSnapshot(initial.takeSnapshot());
 
   expect(dateRange).toEqual(
     new DateRange(

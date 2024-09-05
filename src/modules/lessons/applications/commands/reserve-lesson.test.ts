@@ -157,7 +157,6 @@ describe('Feature: reserving a lesson', () => {
       });
 
       await commandHandler.execute(command);
-
       expectRemainingCredits('student-id', 2);
     });
   });
