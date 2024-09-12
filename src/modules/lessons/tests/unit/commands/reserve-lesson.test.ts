@@ -89,11 +89,9 @@ describe('Feature: reserving a lesson', () => {
     });
 
   const expectRemainingCredits = (studentId: string, credits: number) => {
-    const student = studentRepository
-      .findByIdSync(new StudentId(studentId))!
-      .takeSnapshot();
+    const student = studentRepository.findByIdSync(new StudentId(studentId))!;
 
-    expect(student.creditPoints).toEqual(credits);
+    expect(student?.getCreditPoints().asNumber()).toEqual(credits);
   };
 
   const expectLessonToBeReserved = () => {

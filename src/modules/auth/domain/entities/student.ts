@@ -51,4 +51,8 @@ export class Student extends AggregateRoot<StudentId, State, Snapshot> {
   refund(value: CreditPoints): void {
     this._state.creditPoints = this._state.creditPoints.add(value);
   }
+
+  getCreditPoints() {
+    return this._state.creditPoints;
+  }
 }

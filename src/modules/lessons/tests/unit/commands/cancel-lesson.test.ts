@@ -17,35 +17,27 @@ describe('Feature: canceling a lesson', () => {
   const lessonRepository = new RamLessonRepository();
   const studentRepository = new RamStudentRepository();
 
-  function createCommandHandler(props?: { dateProvider: IDateProvider }) {
+  const createCommandHandler = (props?: { dateProvider: IDateProvider }) => {
     return new CancelLessonCommandHandler(
       lessonRepository,
       studentRepository,
       props?.dateProvider ??
         new FixedDateProvider(new Date('2024-01-10T10:00:00.000Z')),
     );
-  }
+  };
 
-  function expectCreditsToBeRefunded() {
-    const student = studentRepository
-      .findByIdSync(new StudentId('student-id'))!
-      .takeSnapshot();
+  const expectCreditsBalanceToBe = (value: number) => {
+    const student = studentRepository.findByIdSync(
+      new StudentId('student-id'),
+    )!;
 
-    expect(student.creditPoints).toBe(4);
-  }
+    expect(student.getCreditPoints().asNumber()).toBe(value);
+  };
 
-  function expectCreditsToRemainUnchanged() {
-    const student = studentRepository
-      .findByIdSync(new StudentId('student-id'))!
-      .takeSnapshot();
-
-    expect(student.creditPoints).toBe(2);
-  }
-
-  function expectLessonToBeCancelled() {
+  const expectLessonToBeCancelled = () => {
     const lesson = lessonRepository.findByIdSync(new LessonId('lesson-id'));
     expect(lesson).toBe(null);
-  }
+  };
 
   beforeEach(() => {
     lessonRepository.clear();
@@ -81,11 +73,11 @@ describe('Feature: canceling a lesson', () => {
 
     it('should refund the student', async () => {
       await createCommandHandler().execute(command);
-      expectCreditsToBeRefunded();
+      expectCreditsBalanceToBe(4);
     });
   });
 
-  describe('Scenario: as an instructor', () => {
+  describe('Context: as an instructor', () => {
     describe('Scenario: canceling the lesson as the instructor of the lesson', () => {
       const command = new CancelLessonCommand(
         AuthSeeds.instructor('instructor-id'),
@@ -101,7 +93,7 @@ describe('Feature: canceling a lesson', () => {
 
       it('should give the points back to the student', async () => {
         await createCommandHandler().execute(command);
-        expectCreditsToBeRefunded();
+        expectCreditsBalanceToBe(4);
       });
     });
 
@@ -121,8 +113,8 @@ describe('Feature: canceling a lesson', () => {
     });
   });
 
-  describe('Scenario: canceling a lesson as a student', () => {
-    describe('Scenario: the student cancels more than 24 hours before the lesson', () => {
+  describe('Context: as a student', () => {
+    describe('Scenario: canceling > 24 hours before the lesson', () => {
       const command = new CancelLessonCommand(AuthSeeds.student('student-id'), {
         lessonId: 'lesson-id',
       });
@@ -144,11 +136,11 @@ describe('Feature: canceling a lesson', () => {
         });
 
         await commandHandler.execute(command);
-        expectCreditsToBeRefunded();
+        expectCreditsBalanceToBe(4);
       });
     });
 
-    describe('Scenario: the student cancels less than 24 hours but more than 2 hours', () => {
+    describe('Scenario: cancling < 24 hours but > 2 hours', () => {
       const command = new CancelLessonCommand(AuthSeeds.student('student-id'), {
         lessonId: 'lesson-id',
       });
@@ -170,11 +162,11 @@ describe('Feature: canceling a lesson', () => {
         });
 
         await commandHandler.execute(command);
-        expectCreditsToRemainUnchanged();
+        expectCreditsBalanceToBe(2);
       });
     });
 
-    describe('Scenario: the student cancels more than 2 hours before the lesson', () => {
+    describe('Scenario: canceling <2 hours before the lesson', () => {
       const command = new CancelLessonCommand(AuthSeeds.student('student-id'), {
         lessonId: 'lesson-id',
       });
