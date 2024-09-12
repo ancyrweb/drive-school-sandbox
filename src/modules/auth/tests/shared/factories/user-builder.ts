@@ -1,9 +1,9 @@
-import { User } from '../../domain/entities/user.js';
-import { GetFactoryProps } from '../../../shared/utils/types.js';
-import { UserId } from '../../domain/entities/user-id.js';
-import { AdminId } from '../../domain/entities/admin-id.js';
-import { Account } from '../../domain/model/account.js';
-import { Apikey } from '../../domain/entities/apikey.js';
+import { User } from '../../../domain/entities/user.js';
+import { GetFactoryProps } from '../../../../shared/utils/types.js';
+import { UserId } from '../../../domain/entities/user-id.js';
+import { AdminId } from '../../../domain/entities/admin-id.js';
+import { Account } from '../../../domain/model/account.js';
+import { Apikey } from '../../../domain/entities/apikey.js';
 
 type Props = GetFactoryProps<typeof User>;
 

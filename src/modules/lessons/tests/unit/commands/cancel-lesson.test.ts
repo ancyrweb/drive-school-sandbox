@@ -1,17 +1,17 @@
-import { RamLessonRepository } from '../../infrastructure/persistence/ram/ram-lesson-repository.js';
+import { RamLessonRepository } from '../../../infrastructure/persistence/ram/ram-lesson-repository.js';
 import {
   CancelLessonCommand,
   CancelLessonCommandHandler,
-} from './cancel-lesson.js';
-import { AuthSeeds } from '../../../auth/tests/seeds/auth-seeds.js';
-import { LessonBuilder } from '../../tests/factories/lesson-builder.js';
-import { LessonId } from '../../domain/entities/lesson-id.js';
-import { RamStudentRepository } from '../../../auth/infrastructure/persistence/ram/ram-student-repository.js';
-import { StudentBuilder } from '../../../auth/tests/factories/student-builder.js';
-import { StudentId } from '../../../auth/domain/entities/student-id.js';
-import { NotAuthorizedException } from '../../../shared/exceptions/not-authorized-exception.js';
-import { IDateProvider } from '../../../shared/services/date-provider/date-provider.interface.js';
-import { FixedDateProvider } from '../../../shared/services/date-provider/fixed-date-provider.js';
+} from '../../../applications/commands/cancel-lesson.js';
+import { AuthSeeds } from '../../../../auth/tests/shared/seeds/auth-seeds.js';
+import { LessonBuilder } from '../../shared/factories/lesson-builder.js';
+import { LessonId } from '../../../domain/entities/lesson-id.js';
+import { RamStudentRepository } from '../../../../auth/infrastructure/persistence/ram/ram-student-repository.js';
+import { StudentBuilder } from '../../../../auth/tests/shared/factories/student-builder.js';
+import { StudentId } from '../../../../auth/domain/entities/student-id.js';
+import { NotAuthorizedException } from '../../../../shared/exceptions/not-authorized-exception.js';
+import { IDateProvider } from '../../../../shared/services/date-provider/date-provider.interface.js';
+import { FixedDateProvider } from '../../../../shared/services/date-provider/fixed-date-provider.js';
 
 describe('Feature: canceling a lesson', () => {
   const lessonRepository = new RamLessonRepository();

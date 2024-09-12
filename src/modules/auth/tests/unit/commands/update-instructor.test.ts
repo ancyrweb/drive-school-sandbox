@@ -1,17 +1,17 @@
-import { RamInstructorRepository } from '../../infrastructure/persistence/ram/ram-instructor-repository.js';
+import { RamInstructorRepository } from '../../../infrastructure/persistence/ram/ram-instructor-repository.js';
 import {
   UpdateInstructorCommand,
   UpdateInstructorCommandHandler,
-} from './update-instructor.js';
-import { InstructorBuilder } from '../../tests/factories/instructor-builder.js';
-import { InstructorId } from '../../domain/entities/instructor-id.js';
-import { AuthSeeds } from '../../tests/seeds/auth-seeds.js';
+} from '../../../application/commands/update-instructor.js';
+import { InstructorBuilder } from '../../shared/factories/instructor-builder.js';
+import { InstructorId } from '../../../domain/entities/instructor-id.js';
+import { AuthSeeds } from '../../shared/seeds/auth-seeds.js';
 import {
   expectEventToBeRaised,
   expectNotAuthorized,
   expectNotFound,
-} from '../../../shared/utils/test-utils.js';
-import { InstructorUpdatedEvent } from '../../domain/events/instructor-updated-event.js';
+} from '../../../../shared/utils/test-utils.js';
+import { InstructorUpdatedEvent } from '../../../domain/events/instructor-updated-event.js';
 
 describe('Feature: updating an instructor', () => {
   const instructorRepository = new RamInstructorRepository();

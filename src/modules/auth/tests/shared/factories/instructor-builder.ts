@@ -1,6 +1,6 @@
-import { GetFactoryProps } from '../../../shared/utils/types.js';
-import { Instructor } from '../../domain/entities/instructor.js';
-import { InstructorId } from '../../domain/entities/instructor-id.js';
+import { GetFactoryProps } from '../../../../shared/utils/types.js';
+import { Instructor } from '../../../domain/entities/instructor.js';
+import { InstructorId } from '../../../domain/entities/instructor-id.js';
 
 type Props = GetFactoryProps<typeof Instructor>;
 

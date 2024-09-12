@@ -1,27 +1,27 @@
-import { RamInstructorRepository } from '../../../auth/infrastructure/persistence/ram/ram-instructor-repository.js';
-import { RamStudentRepository } from '../../../auth/infrastructure/persistence/ram/ram-student-repository.js';
-import { RamLessonRepository } from '../../infrastructure/persistence/ram/ram-lesson-repository.js';
+import { RamInstructorRepository } from '../../../../auth/infrastructure/persistence/ram/ram-instructor-repository.js';
+import { RamStudentRepository } from '../../../../auth/infrastructure/persistence/ram/ram-student-repository.js';
+import { RamLessonRepository } from '../../../infrastructure/persistence/ram/ram-lesson-repository.js';
 import {
   ReserveLessonCommand,
   ReserveLessonCommandHandler,
-} from './reserve-lesson.js';
-import { IScheduleProvider } from '../ports/schedule-provider.js';
-import { BrandedId } from '../../../shared/lib/id.js';
-import { InstructorBuilder } from '../../../auth/tests/factories/instructor-builder.js';
-import { InstructorId } from '../../../auth/domain/entities/instructor-id.js';
-import { StudentBuilder } from '../../../auth/tests/factories/student-builder.js';
-import { StudentId } from '../../../auth/domain/entities/student-id.js';
-import { AuthSeeds } from '../../../auth/tests/seeds/auth-seeds.js';
-import { CreditPoints } from '../../../auth/domain/model/credit-points.js';
-import { LessonId } from '../../domain/entities/lesson-id.js';
+} from '../../../applications/commands/reserve-lesson.js';
+import { IScheduleProvider } from '../../../applications/ports/schedule-provider.js';
+import { BrandedId } from '../../../../shared/lib/id.js';
+import { InstructorBuilder } from '../../../../auth/tests/shared/factories/instructor-builder.js';
+import { InstructorId } from '../../../../auth/domain/entities/instructor-id.js';
+import { StudentBuilder } from '../../../../auth/tests/shared/factories/student-builder.js';
+import { StudentId } from '../../../../auth/domain/entities/student-id.js';
+import { AuthSeeds } from '../../../../auth/tests/shared/seeds/auth-seeds.js';
+import { CreditPoints } from '../../../../auth/domain/model/credit-points.js';
+import { LessonId } from '../../../domain/entities/lesson-id.js';
 import {
   expectEventToBeRaised,
   expectNotFound,
-} from '../../../shared/utils/test-utils.js';
-import { BadRequestException } from '../../../shared/exceptions/bad-request-exception.js';
-import { ISchedule } from '../../domain/model/schedule.interface.js';
-import { GetCommandPayload } from '../../../shared/lib/command.js';
-import { LessonReservedEvent } from '../../domain/events/lesson-reserved-event.js';
+} from '../../../../shared/utils/test-utils.js';
+import { BadRequestException } from '../../../../shared/exceptions/bad-request-exception.js';
+import { ISchedule } from '../../../domain/model/schedule.interface.js';
+import { GetCommandPayload } from '../../../../shared/lib/command.js';
+import { LessonReservedEvent } from '../../../domain/events/lesson-reserved-event.js';
 
 class NeverAvailableSchedule implements ISchedule {
   isAvailable(): boolean {

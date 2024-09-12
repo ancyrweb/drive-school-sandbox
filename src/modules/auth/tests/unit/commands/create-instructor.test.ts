@@ -1,21 +1,21 @@
-import { RamInstructorRepository } from '../../infrastructure/persistence/ram/ram-instructor-repository.js';
-import { Argon2Strategy } from '../services/password-strategy/argon2-strategy.js';
+import { RamInstructorRepository } from '../../../infrastructure/persistence/ram/ram-instructor-repository.js';
+import { Argon2Strategy } from '../../../application/services/password-strategy/argon2-strategy.js';
 import {
   CreateInstructorCommand,
   CreateInstructorCommandHandler,
-} from './create-instructor.js';
-import { AuthSeeds } from '../../tests/seeds/auth-seeds.js';
-import { BadRequestException } from '../../../shared/exceptions/bad-request-exception.js';
-import { IApiKeyGenerator } from '../services/apikey-generator/apikey-generator.interface.js';
-import { InstructorId } from '../../domain/entities/instructor-id.js';
-import { RamUserRepository } from '../../infrastructure/persistence/ram/ram-user-repository.js';
-import { UserId } from '../../domain/entities/user-id.js';
-import { Apikey } from '../../domain/entities/apikey.js';
-import { UserCreatedEvent } from '../../domain/events/user-created-event.js';
-import { expectEventToBeRaised } from '../../../shared/utils/test-utils.js';
-import { InstructorCreatedEvent } from '../../domain/events/instructor-created-event.js';
-import { Account } from '../../domain/model/account.js';
-import { UserBuilder } from '../../tests/factories/user-builder.js';
+} from '../../../application/commands/create-instructor.js';
+import { AuthSeeds } from '../../shared/seeds/auth-seeds.js';
+import { BadRequestException } from '../../../../shared/exceptions/bad-request-exception.js';
+import { IApiKeyGenerator } from '../../../application/services/apikey-generator/apikey-generator.interface.js';
+import { InstructorId } from '../../../domain/entities/instructor-id.js';
+import { RamUserRepository } from '../../../infrastructure/persistence/ram/ram-user-repository.js';
+import { UserId } from '../../../domain/entities/user-id.js';
+import { Apikey } from '../../../domain/entities/apikey.js';
+import { UserCreatedEvent } from '../../../domain/events/user-created-event.js';
+import { expectEventToBeRaised } from '../../../../shared/utils/test-utils.js';
+import { InstructorCreatedEvent } from '../../../domain/events/instructor-created-event.js';
+import { Account } from '../../../domain/model/account.js';
+import { UserBuilder } from '../../shared/factories/user-builder.js';
 
 class StubApiKeyGenerator implements IApiKeyGenerator {
   static VALUE = '123456';

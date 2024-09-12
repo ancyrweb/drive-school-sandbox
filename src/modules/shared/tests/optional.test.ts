@@ -1,4 +1,4 @@
-import { Optional } from './optional.js';
+import { Optional } from '../utils/optional.js';
 
 test('an empty optional should be null', () => {
   expect(Optional.empty().isNull()).toBe(true);

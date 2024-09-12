@@ -1,7 +1,7 @@
-import { GetFactoryProps } from '../../../shared/utils/types.js';
-import { Student } from '../../domain/entities/student.js';
-import { StudentId } from '../../domain/entities/student-id.js';
-import { CreditPoints } from '../../domain/model/credit-points.js';
+import { GetFactoryProps } from '../../../../shared/utils/types.js';
+import { Student } from '../../../domain/entities/student.js';
+import { StudentId } from '../../../domain/entities/student-id.js';
+import { CreditPoints } from '../../../domain/model/credit-points.js';
 
 type Props = GetFactoryProps<typeof Student>;
 

@@ -1,5 +1,5 @@
-import { Argon2Strategy } from './argon2-strategy.js';
-import { BcryptStrategy } from './bcrypt-strategy.js';
+import { Argon2Strategy } from '../../../application/services/password-strategy/argon2-strategy.js';
+import { BcryptStrategy } from '../../../application/services/password-strategy/bcrypt-strategy.js';
 
 describe.each([new Argon2Strategy(), new BcryptStrategy()])(
   'Password strategy',

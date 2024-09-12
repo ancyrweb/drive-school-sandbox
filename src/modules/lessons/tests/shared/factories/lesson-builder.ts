@@ -1,10 +1,10 @@
-import { GetFactoryProps } from '../../../shared/utils/types.js';
-import { Lesson } from '../../domain/entities/lesson.js';
-import { LessonId } from '../../domain/entities/lesson-id.js';
-import { StudentId } from '../../../auth/domain/entities/student-id.js';
-import { InstructorId } from '../../../auth/domain/entities/instructor-id.js';
-import { DateRange } from '../../domain/model/date-range.js';
-import { CreditPoints } from '../../../auth/domain/model/credit-points.js';
+import { GetFactoryProps } from '../../../../shared/utils/types.js';
+import { Lesson } from '../../../domain/entities/lesson.js';
+import { LessonId } from '../../../domain/entities/lesson-id.js';
+import { StudentId } from '../../../../auth/domain/entities/student-id.js';
+import { InstructorId } from '../../../../auth/domain/entities/instructor-id.js';
+import { DateRange } from '../../../domain/model/date-range.js';
+import { CreditPoints } from '../../../../auth/domain/model/credit-points.js';
 
 type Props = GetFactoryProps<typeof Lesson>;
 

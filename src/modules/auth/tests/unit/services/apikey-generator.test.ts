@@ -1,7 +1,7 @@
-import { ApikeyGenerator } from './apikey-generator.js';
+import { ApikeyGenerator } from '../../../application/services/apikey-generator/apikey-generator.js';
 import { RamUserRepository } from '../../../infrastructure/persistence/ram/ram-user-repository.js';
 import { Apikey } from '../../../domain/entities/apikey.js';
-import { UserBuilder } from '../../../tests/factories/user-builder.js';
+import { UserBuilder } from '../../shared/factories/user-builder.js';
 
 class TestableRandomApiKeyGenerator extends ApikeyGenerator {
   private availableKeys = ['key1', 'key2'];

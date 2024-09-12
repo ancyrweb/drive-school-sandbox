@@ -1,4 +1,4 @@
-import { DateRange } from './date-range.js';
+import { DateRange } from '../../../domain/model/date-range.js';
 
 const hours = (a: string, b: string) =>
   new DateRange(

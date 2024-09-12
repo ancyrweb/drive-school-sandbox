@@ -1,5 +1,5 @@
-import { DateRange } from './date-range.js';
-import { Schedule } from './schedule.js';
+import { DateRange } from '../../../domain/model/date-range.js';
+import { Schedule } from '../../../domain/model/schedule.js';
 
 test('available when the schedule is empty', () => {
   const ranges = [];
